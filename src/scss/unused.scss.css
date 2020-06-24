@@ -1,0 +1,11 @@
+.triangle-drop {
+    border-bottom: solid 8px black;
+    border-left: solid 8px transparent;
+    border-right: solid 8px transparent;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    left: 70%;
+    vertical-align: middle;
+    bottom: -8px;
+}
