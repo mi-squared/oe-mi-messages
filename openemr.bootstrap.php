@@ -11,11 +11,10 @@
 //namespace PatientPrivacy;
 //require_once __DIR__.'/vendor/autoload.php';
 
-use OpenEMR\Events\PatientFinder\PatientFinderFilterEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use OpenEMR\Menu\MenuEvent;
-use PatientPrivacy\PatientPrivacyService;
+
 
 function oe_module_mi_messages_add_menu_item(MenuEvent $event)
 {
@@ -25,8 +24,8 @@ function oe_module_mi_messages_add_menu_item(MenuEvent $event)
     $menuItem->requirement = 0;
     $menuItem->target = 'adm';
     $menuItem->menu_id = 'adm0';
-    $menuItem->label = xlt("MI-Messages");
-    $menuItem->url = "/interface/modules/custom_modules/oe-mi-messages/index.php?action=admin";
+    $menuItem->label = xlt("Pro Messages");
+    $menuItem->url = "/interface/modules/custom_modules/oe-mi-messages/client";
     $menuItem->children = [];
     $menuItem->acl_req = ["admin", "super"];
 

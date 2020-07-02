@@ -1,5 +1,4 @@
 <?php
 return [
-  'APP_NAMESPACE' => 'MiMessages',
-
+  'APP_NAMESPACE' => 'Mi2\Messages',
 ];

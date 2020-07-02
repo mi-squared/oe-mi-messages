@@ -10,10 +10,11 @@
     ],
     "require": {
         "mi-squared/mi-framework": "^0.1.0",
+        "illuminate/database": "^7.16",
         "openemr/oe-module-installer-plugin": "^0.1.0"
     },
     "autoload": {
-        "psr-0": {"MiMessages": "src/"}
+        "psr-4": {"Mi2\\Messages": "src/"}
     },
     "minimum-stability": "dev"
 }

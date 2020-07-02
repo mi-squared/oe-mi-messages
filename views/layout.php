@@ -9,6 +9,7 @@ use OpenEMR\OeUI\OemrUI;
 <html>
 <head>
     <?php Header::setupHeader(); ?>
+    <script type="module" src="<?php echo $GLOBALS['webroot'] ?>/interface/modules/custom_modules/oe-mi-messages/src/main.js"></script>
     <title><?php echo $this->title ?></title>
 </head>
 <body class="body_top">
