@@ -132,8 +132,8 @@ export default {
     el.scrollTop = el.scrollHeight
   },
   created () {
-    this.$store.dispatch('fetchMessage', 1).then(message => {
-      alert(message.subject)
+    this.$store.dispatch('fetchMessage', this.messageId).then(message => {
+      console.log(message.subject)
     })
   }
 }

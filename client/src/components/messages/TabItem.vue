@@ -22,9 +22,11 @@ export default {
   methods: {
     closeMessage () {
       this.$store.dispatch('closeMessage', this.tabbedMessage)
-      if (this.$router.history.current.name === 'PageViewMessage' &&
-        this.$router.history.current.params.messageId === this.tabbedMessage['.key']) {
+      if (this.$route.name === 'PageMessageView' &&
+        this.$route.params.messageId === this.tabbedMessage['.key']) {
         this.$router.go(-1)
+        // Emit the event that indicates this message tab was closed
+        this.$emit('tabClosed', this.tabbedMessage['.key'])
       }
     }
   }

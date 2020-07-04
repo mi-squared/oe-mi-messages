@@ -12,12 +12,16 @@ export default {
   props: {
     listId: {
       required: true,
-      type: String
+      type: Number
     }
   },
   computed: {
     messages () {
-      return Object.keys(this.$store.state.messageFilters[this.listId].messages).map(messageId => this.$store.state.messages[messageId])
+      if (this.$store.state.messageFilters[this.listId]) {
+        return Object.keys(this.$store.state.messageFilters[this.listId].messages).map(messageId => this.$store.state.messages[messageId])
+      } else {
+        return []
+      }
     }
   }
 }

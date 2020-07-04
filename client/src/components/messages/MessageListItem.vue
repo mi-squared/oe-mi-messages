@@ -18,9 +18,9 @@
       <div clas="preview">{{message.body}}</div>
       <div class="attachments">
         <AttachmentItem
-          v-for="file in attachments"
-          :file="file"
-          :key="file['.key']"
+          v-for="attachment in attachments"
+          :attachment="attachment"
+          :key="attachment['.key']"
         />
       </div>
     </td>
@@ -91,7 +91,11 @@ export default {
       }
     },
     replyCount () {
-      return Object.keys(this.message.replies).length
+      let replyCount = 0
+      if (this.message.replies) {
+        replyCount = Object.keys(this.message.replies).length
+      }
+      return replyCount
     },
     isAssigned () {
       if (this.message.assignedTo === null) {
@@ -124,18 +128,30 @@ export default {
       }
     },
     attachments () {
-      const attachmentObjects = Object.keys(this.message.attachments).map(attachmentId => this.$store.state.files[attachmentId])
-      return attachmentObjects
+      if (this.message.attachments) {
+        const attachmentKeys = Object.keys(this.message.attachments)
+        const attachmentObjects = attachmentKeys.map(attachmentId => this.$store.state.attachments[attachmentId])
+        return attachmentObjects
+      } else {
+        return []
+      }
     },
     tags () {
-      const tagObjects = Object.keys(this.message.tags).map(tagId => this.$store.state.tags[tagId])
-      return tagObjects
+      if (this.message.tags) {
+        const tagObjects = Object.keys(this.message.tags).map(tagId => this.$store.state.tags[tagId])
+        return tagObjects
+      } else {
+        return []
+      }
     },
     fromName () {
       return this.$store.state.users[this.message.userId].name
     },
     viewersList () {
-      const viewers = Object.keys(this.message.viewers)
+      let viewers = []
+      if (this.message.viewers) {
+        viewers = Object.keys(this.message.viewers)
+      }
       let verb = ''
       if (viewers.length > 1) {
         verb = ' are viewing'
@@ -146,7 +162,11 @@ export default {
       return vlist + verb
     },
     hasViewers () {
-      if (Object.keys(this.message.viewers).length > 0) {
+      let viewers = []
+      if (this.message.viewers) {
+        viewers = Object.keys(this.message.viewers)
+      }
+      if (viewers.length > 0) {
         return true
       } else {
         return false

@@ -21,9 +21,23 @@ export default {
   },
   computed: {
     openMessages () {
-      const openMessages = Object.keys(this.$store.state.userState.openTabs).map(messageId => this.$store.state.messages[messageId])
+      let openMessages = []
+      if (this.$store.state.userState.openTabs) {
+        openMessages = Object.keys(this.$store.state.userState.openTabs).map(messageId => this.$store.state.messages[messageId])
+      }
       return openMessages
     }
+  },
+  beforeCreate () {
+    this.$store.dispatch('fetchAllMessageFilters')
+      .then(messageFilters => {
+        console.log(messageFilters)
+      })
+
+    // this.$store.dispatch('fetchAllUsers')
+    //   .then(users => {
+    //     console.log(users)
+    //   })
   }
 }
 </script>

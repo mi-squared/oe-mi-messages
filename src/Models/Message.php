@@ -2,13 +2,18 @@
 
 namespace Mi2\Messages\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
-
-class Message extends Eloquent
+class Message extends AbstractModel
 {
     protected $table = 'aa_mi_desk_messages';
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['attachments'];
+
     public function attachments() {
-        return $this->hasMany(Attachment::class);
+        return $this->hasMany(Attachment::class, 'messageId');
     }
 }

@@ -2,9 +2,16 @@
 
 namespace Mi2\Messages\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
-
-class MessageFilter extends Eloquent
+class MessageFilter extends AbstractModel
 {
-    protected $table = 'aa_mi_desk_msg_filters';
+    protected $table = 'aa_mi_desk_filters';
+
+    public function messages()
+    {
+        return $this->belongsToMany(
+            Message::class,
+            'aa_mi_desk_msgs_filters',
+            'filterId',
+            'messageId');
+    }
 }

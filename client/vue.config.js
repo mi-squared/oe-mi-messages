@@ -19,11 +19,11 @@ module.exports = {
       aggregateTimeout: 300,
       poll: 1000
     },
-    proxy: {
-     '/': {
-        target: 'http://perfect-transcription:8888/interface/modules/custom_modules/oe-mi-messages',
-        changeOrigin: true
-     }
-    }
+    // proxy: {
+    //  '/': {
+    //     target: 'http://perfect-transcription:8888',
+    //     changeOrigin: true
+    //  }
+    // }
   }
 }

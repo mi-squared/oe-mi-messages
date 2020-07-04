@@ -1,15 +1,15 @@
 <template>
   <div class="attachment badge" @click.stop="viewFile()">
     <span class="fa filename" :class="icon"></span>&nbsp;
-    <span class="filename">{{ file.name }}</span>
+    <span class="filename">{{ attachment.name }}</span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AttachementItem',
+  name: 'AttachmentItem',
   props: {
-    file: {
+    attachment: {
       required: true,
       type: Object
     }
@@ -19,7 +19,7 @@ export default {
       this.$router.push({
         name: 'PagePDFVue',
         params: {
-          fileId: this.file['.key']
+          fileId: this.attachment['.key']
         }
       })
       // this.$store.dispatch('openFile', this.file)
@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     icon () {
-      const ext = this.file.name.split('.').pop().toLowerCase()
+      const ext = this.attachment.name.split('.').pop().toLowerCase()
       let icon = 'fa-file'
       if (ext === 'pdf') {
         icon = 'fa-file'
