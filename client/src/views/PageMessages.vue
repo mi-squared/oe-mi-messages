@@ -28,16 +28,16 @@ export default {
       return openMessages
     }
   },
-  beforeCreate () {
+  created () {
     this.$store.dispatch('fetchAllMessageFilters')
       .then(messageFilters => {
         console.log(messageFilters)
       })
 
-    // this.$store.dispatch('fetchAllUsers')
-    //   .then(users => {
-    //     console.log(users)
-    //   })
+    this.$store.dispatch('fetchAllUsers')
+      .then(users => {
+        console.log(users)
+      })
   }
 }
 </script>

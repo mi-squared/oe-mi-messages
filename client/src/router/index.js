@@ -25,9 +25,10 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/file/:fileId',
+    path: '/attachment/:attachmentId',
     name: 'PagePDFVue',
-    component: PagePDFVue
+    component: PagePDFVue,
+    props: true
   },
   {
     path: '/messages',

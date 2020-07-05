@@ -1,5 +1,5 @@
 <template>
-  <div class="attachment badge" @click.stop="viewFile()">
+  <div class="attachment badge" @click.stop="viewAttachment()">
     <span class="fa filename" :class="icon"></span>&nbsp;
     <span class="filename">{{ attachment.name }}</span>
   </div>
@@ -15,11 +15,12 @@ export default {
     }
   },
   methods: {
-    viewFile () {
+    viewAttachment () {
+      // If the file is a PDF, open the viewer
       this.$router.push({
         name: 'PagePDFVue',
         params: {
-          fileId: this.attachment['.key']
+          attachmentId: this.attachment['.key']
         }
       })
       // this.$store.dispatch('openFile', this.file)

@@ -14,7 +14,7 @@
         class="canvas"
         v-for="i in numPages"
         :key="i"
-        :src="src"
+        :src="url"
         :page="i"
       ></pdf>
     </div>
@@ -26,16 +26,27 @@
 import pdf from 'vue-pdf'
 import axios from 'axios'
 
-var loadingTask = pdf.createLoadingTask('http://localhost:8080/PT_Complex.pdf')
+var loadingTask = '/PT_Complex.pdf'
 
 export default {
   components: {
     pdf
   },
+  props: {
+    attachmentId: {
+      required: true,
+      type: Number
+    }
+  },
   data () {
     return {
-      src: 'http://localhost:8080/PT_Complex.pdf',
       numPages: undefined
+    }
+  },
+  computed: {
+    url () {
+      return this.$store.state.attachments[this.attachmentId].pointer
+      // return '/PT_Complex.pdf'
     }
   },
   methods: {
@@ -68,6 +79,8 @@ export default {
     }
   },
   mounted () {
+    // TODO This was global before, may not work??
+    loadingTask = pdf.createLoadingTask(this.url)
     loadingTask.promise.then(pdf => {
       this.numPages = pdf.numPages
     })

@@ -1,5 +1,8 @@
 <?php
 use Mi2\Messages\Models\Database;
+
+$ignoreAuth = true;
+
 require_once __DIR__.'/../../../globals.php';
 //require_once __DIR__.'/vendor/autoload.php';
 new Database();

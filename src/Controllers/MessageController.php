@@ -46,7 +46,7 @@ class MessageController extends AbstractController
 
     public function _action_fetch_all_users()
     {
-        $users = User::all();
+        $users = User::all(['id', 'username']);
         $json = $users->toJson();
         echo $json;
     }

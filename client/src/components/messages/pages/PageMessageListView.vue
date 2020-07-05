@@ -12,7 +12,7 @@ export default {
   props: {
     listId: {
       required: true,
-      type: Number
+      type: String
     }
   },
   computed: {

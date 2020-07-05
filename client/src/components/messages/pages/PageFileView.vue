@@ -17,7 +17,7 @@ import pdfjs from 'pdfjs-dist/webpack'
 export default {
   name: 'PageFileView',
   props: {
-    fileId: {
+    url: {
       required: true,
       type: String
     }
@@ -64,7 +64,7 @@ export default {
   mounted () {
     // If absolute URL from the remote server is provided, configure the CORS
     // header on that server.
-    var url = 'http://localhost:8080/PT_Complex.pdf'
+    var url = this.url
 
     // The workerSrc property shall be specified.
     pdfjs.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js'

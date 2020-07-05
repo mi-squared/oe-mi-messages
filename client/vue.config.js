@@ -13,17 +13,12 @@ module.exports = {
   devServer: {
     disableHostCheck: true,
     headers: {
-      "Access-Control-Allow-Origin": "*"
+      'Access-Control-Allow-Origin': '*'
     },
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000
     },
-    // proxy: {
-    //  '/': {
-    //     target: 'http://perfect-transcription:8888',
-    //     changeOrigin: true
-    //  }
-    // }
+    proxy: 'http://perfect-transcription:8888'
   }
 }
