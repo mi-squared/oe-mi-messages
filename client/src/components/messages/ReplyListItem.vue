@@ -8,29 +8,7 @@
           <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ from.name }}</h5>
           <span class="g-color-gray-dark-v4 g-font-size-12"><AppDate :timestamp="reply.createdAt"/> </span>
         </div>
-
         <p>{{ reply.body }}</p>
-
-        <ul class="list-inline d-sm-flex my-0">
-          <li class="list-inline-item g-mr-20">
-            <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-              <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
-              178
-            </a>
-          </li>
-          <li class="list-inline-item g-mr-20">
-            <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-              <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
-              34
-            </a>
-          </li>
-          <li class="list-inline-item ml-auto">
-            <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-              <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
-              Reply
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
@@ -99,6 +77,10 @@ export default {
   }
 
   .media-comment {
-    margin-top: 20px
+    margin-top: 20px;
+  }
+
+  .media-body {
+    margin-right: 50px;
   }
 </style>

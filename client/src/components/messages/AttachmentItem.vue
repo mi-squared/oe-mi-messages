@@ -1,7 +1,7 @@
 <template>
-  <div class="attachment badge" @click.stop="viewAttachment()">
-    <span class="fa filename" :class="icon"></span>&nbsp;
-    <span class="filename">{{ attachment.name }}</span>
+  <div class="attachment badge" :class="[ attachment.type ]" @click.stop="viewAttachment()">
+    <span class="fa attachment-name" :class="icon"></span>&nbsp;
+    <span class="attachment-name">{{ attachment.name }}</span>
   </div>
 </template>
 
@@ -17,21 +17,28 @@ export default {
   methods: {
     viewAttachment () {
       // If the file is a PDF, open the viewer
-      this.$router.push({
-        name: 'PagePDFVue',
-        params: {
-          attachmentId: this.attachment['.key']
-        }
-      })
+      if (this.attachment.type === 'document') {
+        // make the call to service, and get PDF
+        this.$store.dispatch('fetchPreview', { attachment: this.attachment })
+          .then(file => {
+            this.$router.push({
+              name: 'PagePDFVue',
+              params: {
+                fileId: file['.key']
+              }
+            })
+          })
+      }
       // this.$store.dispatch('openFile', this.file)
     }
   },
   computed: {
     icon () {
-      const ext = this.attachment.name.split('.').pop().toLowerCase()
       let icon = 'fa-file'
-      if (ext === 'pdf') {
+      if (this.attachment.type === 'document') {
         icon = 'fa-file'
+      } else if (this.attachment.type === 'patient') {
+        icon = 'fa-user'
       }
       return icon
     }
@@ -40,7 +47,7 @@ export default {
 </script>
 
 <style scoped>
-.filename {
-  color: white;
-}
+  .attachment-name {
+    color: white;
+  }
 </style>

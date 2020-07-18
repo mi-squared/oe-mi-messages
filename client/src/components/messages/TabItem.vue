@@ -3,7 +3,7 @@
     <router-link :to="{name: 'PageMessageView', params: {messageId: this.tabbedMessage['.key']}}" class="nav-link d-flex">
       <div class="d-flex">
         <span class="d-flex p-2"><i class="fa fa-envelope"></i></span>
-        <span>{{tabbedMessage.subject}}</span>
+        <span>{{ this.tabbedMessage.subject }}</span>
         <span class="d-flex align-content-center p-2"><a @click.prevent="closeMessage" class="tab-closer"><i class="fa fa-times"></i></a></span>
       </div>
     </router-link>
@@ -23,7 +23,7 @@ export default {
     closeMessage () {
       this.$store.dispatch('closeMessage', this.tabbedMessage)
       if (this.$route.name === 'PageMessageView' &&
-        this.$route.params.messageId === this.tabbedMessage['.key']) {
+        parseInt(this.$route.params.messageId, 10) === parseInt(this.tabbedMessage['.key'], 10)) {
         this.$router.go(-1)
         // Emit the event that indicates this message tab was closed
         this.$emit('tabClosed', this.tabbedMessage['.key'])

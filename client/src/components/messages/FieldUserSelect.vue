@@ -24,7 +24,7 @@
           class="my-tag-left"
           @click="props.performOpenEdit(props.index)"
         >
-          <img class="avatar" :src="props.tag.avatar">
+          <img class="tag avatar" :src="props.tag.avatar">
         </div>
       </vue-tags-input>
     </div>
@@ -78,4 +78,25 @@ export default {
 
 <style scoped>
 
+  .ti-tag {
+    padding: 0;
+  }
+
+  ul.ti-tags {
+    line-height: 1.8em;
+    font-size: inherit;
+  }
+
+  .tags-input {
+    line-height: 1.8em;
+  }
+
+  .user-select {
+    line-height: 1.8em;
+  }
+
+  img.tag.avatar {
+    height: 20px;
+    width: 20px;
+  }
 </style>

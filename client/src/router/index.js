@@ -25,7 +25,13 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/attachment/:attachmentId',
+    path: '/attachment/edit/:fileId',
+    name: 'PagePDFEdit',
+    component: PagePDFVue,
+    props: true
+  },
+  {
+    path: '/attachment/:fileId',
     name: 'PagePDFVue',
     component: PagePDFVue,
     props: true

@@ -10,14 +10,14 @@ export default {
   props: {
     timestamp: {
       required: true,
-      type: Number
+      type: String
     }
   },
   filters: {
     humanFriendlyDate (ts) {
       let formatted = ''
       const rightNow = moment().toISOString()
-      const timestamp = moment.unix(ts).toISOString()
+      const timestamp = moment(ts).toISOString()
       if (moment(timestamp).isSame(rightNow, 'hour')) {
         formatted = moment(timestamp).fromNow()
       } else if (moment(timestamp).isSame(rightNow, 'day')) {

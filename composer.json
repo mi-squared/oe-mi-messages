@@ -11,7 +11,9 @@
     "require": {
         "mi-squared/mi-framework": "^0.1.0",
         "illuminate/database": "6.18.23",
-        "openemr/oe-module-installer-plugin": "^0.1.0"
+        "openemr/oe-module-installer-plugin": "^0.1.0",
+        "cboden/ratchet": "^0.4",
+        "php-unoconv/php-unoconv": "^4.1.0"
     },
     "autoload": {
         "psr-4": {"Mi2\\Messages\\": "src/"}

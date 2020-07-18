@@ -21,7 +21,11 @@ export default {
   },
   computed: {
     replies () {
-      return Object.keys(this.message.replies).map(replyId => this.$store.state.replies[replyId])
+      if (this.message.replies) {
+        return Object.keys(this.message.replies).map(replyId => this.$store.state.replies[replyId])
+      } else {
+        return []
+      }
     }
   }
 }

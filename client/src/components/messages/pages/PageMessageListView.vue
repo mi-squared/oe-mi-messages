@@ -1,7 +1,5 @@
 <template>
-    <div class="message-list">
-      <MessageList :messages="messages"/>
-    </div>
+  <MessageList :listId="listId" :messages="messages"/>
 </template>
 
 <script>

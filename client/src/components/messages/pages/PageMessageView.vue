@@ -1,14 +1,11 @@
 <template>
   <div class="message-view-container">
     <nav class="navbar navbar-expand-md message-bar">
-      <div v-if="assignable"><a href="#" ><span class="fa fa-square"></span></a></div>
-      <div v-else><a href="#" ><span class="fa fa-envelope"></span></a></div>
+      <div class="back-button" @click="back()"><span class="fa fa-arrow-left"></span></div>
       <h1>{{message.subject}}</h1>
       <AppTeam v-for="team in teamRecipients" :team="team" :key="team['.key']"/>
-      <ul>
-        <li><span class="fa fa-star"></span><span>Follow</span></li>
-        <li><span class="fa fa-keyboard"></span><span>Compose</span></li>
-        <li><span class="fa fa-chevron-down"></span><span>details</span></li>
+      <ul class="message-actions">
+        <li><StatusPopper :status="messageStatus" @change-message-status="changeMessageStatus"></StatusPopper></li>
       </ul>
     </nav>
     <div v-if="assignable">
@@ -29,37 +26,39 @@
 
             <p v-html="message.body"></p>
 
-            <ul class="list-inline d-sm-flex my-0">
-              <li class="list-inline-item g-mr-20">
-                <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                  <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
-                  178
-                </a>
-              </li>
-              <li class="list-inline-item g-mr-20">
-                <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                  <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
-                  34
-                </a>
-              </li>
-              <li class="list-inline-item ml-auto">
-                <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
-                  <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
-                  Reply
-                </a>
-              </li>
-            </ul>
+            <div class="attachments">
+              <AttachmentItem
+                v-for="attachment in attachments"
+                :attachment="attachment"
+                :key="attachment['.key']"
+              />
+            </div>
           </div>
         </div>
       </div>
       <ReplyList :message="message"/>
       <div id="scroll-to-me"></div>
-      <div class="message-editor">
-        <TextEditor/>
+      <div v-if="isReplying" class="message-editor">
+        <TextEditor @updateContent="replyText = $event"/>
+        <div class="message-editor-actions-container">
+          <ul class="message-editor-actions reply">
+            <li>
+              <a class="submit-reply" @click="submitReply()">Send</a>
+            </li>
+            <li>
+              <a class="submit-reply" @click="cancelReply()">Cancel</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-else class="message-editor">
         <div class="message-editor-actions-container">
           <ul class="message-editor-actions">
             <li>
-              <a class="">Send</a>
+              <a v-if="!isReplying" @click="isReplying = true" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+                <i class="fa fa-reply"></i>
+                Reply
+              </a>
             </li>
           </ul>
         </div>
@@ -73,10 +72,14 @@ import AppDate from '../../AppDate'
 import TextEditor from '../../TextEditor'
 import AppTeam from '../../AppTeam'
 import ReplyList from '../ReplyList'
+import AttachmentItem from '../AttachmentItem'
+import StatusPopper from '../StatusPopper'
 
 export default {
   name: 'PageViewMessage',
   components: {
+    StatusPopper,
+    AttachmentItem,
     ReplyList,
     TextEditor,
     AppDate,
@@ -88,7 +91,25 @@ export default {
       type: String
     }
   },
+  data () {
+    return {
+      isReplying: false,
+      replyText: ''
+    }
+  },
   computed: {
+    messageStatus () {
+      return this.$store.state.messageOptions.statusOptions[this.message.status]
+    },
+    attachments () {
+      if (this.message.attachments) {
+        const attachmentKeys = Object.keys(this.message.attachments)
+        const attachmentObjects = attachmentKeys.map(attachmentId => this.$store.state.attachments[attachmentId])
+        return attachmentObjects
+      } else {
+        return []
+      }
+    },
     message () {
       return this.$store.state.messages[this.messageId]
     },
@@ -127,19 +148,44 @@ export default {
       }
     }
   },
+  methods: {
+    back () {
+      this.$router.back()
+    },
+    changeMessageStatus (status) {
+      this.$store.dispatch('setMessageStatus', { message: this.message, status: status })
+    },
+    submitReply () {
+      this.$store.dispatch('addReply', { message: this.message, text: this.replyText, userId: this.$store.state.authId })
+      this.isReplying = false
+    },
+    cancelReply () {
+      this.isReplying = false
+    }
+  },
   mounted () {
     const el = document.getElementById('message-view')
     el.scrollTop = el.scrollHeight
   },
   created () {
-    this.$store.dispatch('fetchMessage', this.messageId).then(message => {
-      console.log(message.subject)
-    })
+    this.$store.dispatch('fetchMessage', { messageId: this.messageId })
+      .then(message => {
+        console.log(message.subject)
+      })
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+  .back-button {
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .submit-reply {
+    cursor: pointer;
+  }
 
   .message-bar {
     border-bottom: 1px solid gray;
@@ -150,10 +196,13 @@ export default {
   .message-editor {
     padding: 1.5rem;
     margin-bottom: 80px;
+    margin-left: 44px;
   }
 
   .message-view-container {
     height: 100%;
+    padding-top: 44px;
+    padding-left: 8px;
   }
 
   .message-view {
@@ -169,23 +218,30 @@ export default {
     border-width: .2rem;
   }
 
+  ul.message-actions {
+    list-style-type: none;
+  }
+
   ul.message-editor-actions {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
-    border-bottom: 1px solid gray;
+    &.reply {
+      border-left: 1px solid gray;
+      border-right: 1px solid gray;
+      border-bottom: 1px solid gray;
+    }
+    li {
+      float: left;
+      display: inline-block;
+      &.reply {
+        border-right: 1px solid gray;
+      }
+    }
   }
 
-  li {
-    float: left;
-    display: inline-block;
-    border-right: 1px solid gray;
-  }
-
-  li a {
+  ul.message-editor-actions li a {
     display: block;
     text-align: center;
     padding: 4px 12px;
@@ -219,7 +275,7 @@ export default {
   }
 
   .g-bg-secondary {
-    background-color: #fafafa !important;
+    background-color: rgba(0, 0, 0, 0.01) !important;
   }
 
   .u-shadow-v18 {
@@ -235,6 +291,10 @@ export default {
   }
 
   .media-comment {
-    margin-top: 20px
+    margin-top: 20px;
+  }
+
+  .media-body {
+    margin-right: 50px;
   }
 </style>

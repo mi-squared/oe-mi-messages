@@ -1,8 +1,8 @@
 <template>
-  <div class="message-view">
+  <div class="message-view-container">
     <form @submit.prevent="save">
       <div class="form-group">
-        <input v-model="subject" type="text" id="message_subject" class="form-input" name="subject">
+        <input placeholder="Subject..." v-model="subject" type="text" id="message-subject" class="form-input" name="subject">
       </div>
 
       <div class="form-group">
@@ -56,5 +56,13 @@ export default {
 </script>
 
 <style scoped>
-
+  .message-view-container {
+    height: 100%;
+    padding: 44px;
+  }
+  #message-subject {
+    min-width: 450px;
+    line-height: 1.8em;
+    padding: 4px;
+  }
 </style>

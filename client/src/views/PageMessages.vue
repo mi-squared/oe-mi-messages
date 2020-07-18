@@ -22,16 +22,29 @@ export default {
   computed: {
     openMessages () {
       let openMessages = []
-      if (this.$store.state.userState.openTabs) {
-        openMessages = Object.keys(this.$store.state.userState.openTabs).map(messageId => this.$store.state.messages[messageId])
+      if (this.$store.state.messageMeta) {
+        openMessages = Object.values(this.$store.state.messages).filter(message => {
+          const messageMeta = this.$store.state.messageMeta[message['.key']]
+          if (messageMeta &&
+            messageMeta.isOpen) {
+            return true
+          } else {
+            return false
+          }
+        })
       }
       return openMessages
     }
   },
   created () {
-    this.$store.dispatch('fetchAllMessageFilters')
+    this.$store.dispatch('fetchAllMessageFilters', { userId: this.$store.state.authId })
       .then(messageFilters => {
         console.log(messageFilters)
+      })
+
+    this.$store.dispatch('fetchAllMessageMetaForUser', { userId: this.$store.state.authId })
+      .then(messageMeta => {
+        console.log(messageMeta)
       })
 
     this.$store.dispatch('fetchAllUsers')

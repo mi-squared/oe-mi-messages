@@ -876,6 +876,10 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.0.tgz#623aa40623550e3b94767cffeb096a6fb597ed09"
   integrity sha512-9GvTek+7cVw7r+L7TNGOG1astZJWXz2h5q4BqMXl28KN+24iSCm1xo+RhZOZvwdT3bzNe9hD7riJc/lBoO7mgg==
 
+"@tinymce/tinymce-vue@tinymce/tinymce-vue":
+  version "3.2.2"
+  resolved "https://codeload.github.com/tinymce/tinymce-vue/tar.gz/16fdba874b13a3a5d514500c4141497bfd55c4e2"
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -5886,6 +5890,11 @@ open@^6.3.0:
   dependencies:
     is-wsl "^1.1.0"
 
+opencollective-postinstall@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
+  integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
+
 opener@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/opener/-/opener-1.5.1.tgz#6d2f0e77f1a0af0032aca716c2c1fbb8e7e8abed"
@@ -6294,6 +6303,11 @@ pnp-webpack-plugin@^1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
+
+popper.js@^1.15.0:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
 portfinder@^1.0.25:
   version "1.0.25"
@@ -8159,6 +8173,24 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
+tinymce-vue@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tinymce-vue/-/tinymce-vue-1.0.0.tgz#6a641f2294a9c02371e6c5739c4b0923d80d063a"
+  integrity sha512-htEc8lDGC4guQx1H5QzsNu55ynyehUKhAYdWRUqu9VfgA41x0VHqXTMoLRdo2oDlZYqJ4u5k7XqL3HtyxI7HgQ==
+  dependencies:
+    tinymce "^4.7.3"
+    vue "^2.5.3"
+
+tinymce@^4.7.3, tinymce@^4.7.7:
+  version "4.9.10"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-4.9.10.tgz#47bd7b4d27d80d53a464356eb7c72b97e5c3aadd"
+  integrity sha512-vyzGG04Q44Y7zWIKA4c+G7MxMCsed6JkrhU+k0TaDs9XKAiS+e+D3Fzz5OIJ7p5keF7lbRK5czgI8T1JtouZqw==
+
+tinymce@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.4.1.tgz#4c101e78cbd22c148d6013f7c66eb0cb480723db"
+  integrity sha512-eUjwDVCTSHSnFfpzX5TjTHXsGj5gvPQwzo3RFDF374gfK5voHqcRGojvQnu4NtNW1BAb012/KW1tkXBbUrEveg==
+
 tiptap-commands@^1.13.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/tiptap-commands/-/tiptap-commands-1.13.1.tgz#b605292aa333192f33c7c50079c96262cdc7ff2a"
@@ -8617,6 +8649,14 @@ vue-loader@^15.9.1:
     raw-loader "^3.1.0"
     vue-resize-sensor "^2.0.0"
 
+vue-popperjs@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/vue-popperjs/-/vue-popperjs-2.3.0.tgz#9cfa052878a3b47b670339ea81e05edcb863200f"
+  integrity sha512-925QEeNjlMtb3eDHl5ZlODJzqnQL0nQPEKpr9aQ3XBg21DyqAdfLgD/At4svsPwFeIkpdF1gvHarENon47L9Cg==
+  dependencies:
+    opencollective-postinstall "^2.0.2"
+    popper.js "^1.15.0"
+
 vue-resize-sensor@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/vue-resize-sensor/-/vue-resize-sensor-2.0.0.tgz#3a587fd6802e1688709cf2c5aadae7a0075952bf"
@@ -8635,7 +8675,7 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.6.11:
+vue-template-compiler@^2.5.13, vue-template-compiler@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.11.tgz#c04704ef8f498b153130018993e56309d4698080"
   integrity sha512-KIq15bvQDrcCjpGjrAhx4mUlyyHfdmTaoNfeoATHLAiWB+MU3cx4lOzMwrnUh9cCxy0Lt1T11hAFY6TQgroUAA==
@@ -8648,7 +8688,16 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.10, vue@^2.6.11:
+vue-tinymce-editor@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/vue-tinymce-editor/-/vue-tinymce-editor-1.6.2.tgz#3edfc736782fdb6515d50ce701720e9ec77df9fd"
+  integrity sha1-Pt/HNngv22UV1QznAXIOnsd9+f0=
+  dependencies:
+    tinymce "^4.7.7"
+    vue "^2.5.13"
+    vue-template-compiler "^2.5.13"
+
+vue@^2.5.13, vue@^2.5.3, vue@^2.6.10, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==

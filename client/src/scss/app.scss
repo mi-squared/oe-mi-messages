@@ -131,11 +131,18 @@ h1, h2, h3, h4, h5,
     border-radius: 20px;
     padding: 2px 8px 2px 8px;
     line-height: 1.2em;
+    margin-right: 4px;
     &.attachment {
         line-height: 1.8em;
         font-size: 80%;
-        background-color: $red;
         color: $white;
+        cursor: pointer;
+        &.document {
+            background-color: $red;
+        }
+        &.patient {
+            background-color: $blue;
+        }
     }
     &.bg-gray {
         background-color: $gray-100;
