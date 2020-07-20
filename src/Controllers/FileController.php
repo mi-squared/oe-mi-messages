@@ -17,6 +17,7 @@ use Mi2\Messages\Models\File;
 use Mi2\Messages\Models\Message;
 use Mi2\Messages\Models\MessageFilter;
 use Mi2\Messages\Models\User;
+use PerfectTranscription\DocumentService;
 
 //use PatientPrivacy\PatientPrivacyService;
 
@@ -30,10 +31,15 @@ class FileController extends AbstractController
     {
         $fileId = $this->request->getParam('fileId');
         $content = $this->request->getParam('content');
+        $file = File::find($fileId);
         // Write new files and revisions
-
-
-        echo "success";
+        $attachment = Attachment::find($file->attachmentId);
+        DocumentService::createFromHtml($content, $attachment);
+        $revision = $attachment->revision;
+        $attachment = Attachment::find($file->attachmentId)->with(['files' => function($q) use($revision) {
+            $q->where('aa_mi_desk_files.revision', '=', $revision);
+        }])->first();
+        echo $attachment->toJson();
     }
 
     protected function find_document_url($type, $attachmentId)
@@ -66,15 +72,4 @@ class FileController extends AbstractController
         $file = $this->find_document_url('pdf', $attachmentId);
         echo $file->toJson();
     }
-
-    /**
-     * Save our file as an HTML document so it can be picked up and
-     * converted by unoconv
-     */
-    public function _action_save_file()
-    {
-        $html = $_POST['data'];
-        Api::saveFile($html);
-    }
-
 }

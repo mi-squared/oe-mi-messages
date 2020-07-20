@@ -2,11 +2,11 @@
   <nav id="sidebar" class="">
     <!--    <div class="message-list-controls"><span class="message-control-menu fa fa-chevron-left"></span> <span class="message-control-menu fa fa-ellipsis-v"></span></div>-->
     <nav class="navbar navbar-expand-md message-list-controls">
-      <h1>Filters</h1>
-      <span class="message-control-menu fa fa-chevron-left"></span>
-      <span class="message-control-menu fa fa-ellipsis-v"></span>
+      <h1>Folders</h1>
     </nav>
     <MessageFilterList :messageFilters="messageFilters"/>
+    <div class="message-list-header-item">Teams</div>
+    <MessageFilterList :messageFilters="teams"/>
     <div class="message-list-header-item">Tools</div>
     <MessageToolList :messageTools="messageTools"/>
   </nav>
@@ -23,8 +23,23 @@ export default {
     MessageFilterList
   },
   computed: {
+    teams () {
+      return Object.values(this.$store.state.messageFilters).filter(messageFilter => {
+        if (messageFilter.type === 'team') {
+          return true
+        } else {
+          return false
+        }
+      })
+    },
     messageFilters () {
-      return Object.values(this.$store.state.messageFilters)
+      return Object.values(this.$store.state.messageFilters).filter(messageFilter => {
+        if (messageFilter.type === 'folder') {
+          return true
+        } else {
+          return false
+        }
+      })
     },
     messageTools () {
       return Object.values(this.$store.state.messageTools)
@@ -39,6 +54,10 @@ export default {
     display: block;
     color: gray;
     background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  h1 {
+    margin-left: 28px;
   }
 
   /*.message-list-controls {*/

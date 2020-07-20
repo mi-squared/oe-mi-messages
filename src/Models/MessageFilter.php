@@ -9,6 +9,8 @@ class MessageFilter extends AbstractModel
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
+    protected $fillable = ['name', 'faIcon', 'type' ];
+
     /**
      * The relationships that should always be loaded.
      *
@@ -23,5 +25,10 @@ class MessageFilter extends AbstractModel
             'aa_mi_desk_msgs_filters',
             'filterId',
             'messageId');
+    }
+
+    public function team()
+    {
+        return $this->hasOne(Team::class, 'filterId');
     }
 }

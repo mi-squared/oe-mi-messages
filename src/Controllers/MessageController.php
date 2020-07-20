@@ -16,7 +16,9 @@ use Mi2\Messages\Models\MessageFilter;
 use Mi2\Messages\Models\MessageMeta;
 use Mi2\Messages\Models\MessagesFilters;
 use Mi2\Messages\Models\Reply;
+use Mi2\Messages\Models\Team;
 use Mi2\Messages\Models\User;
+use Mi2\Messages\Models\UsersTeams;
 
 //use PatientPrivacy\PatientPrivacyService;
 
@@ -87,18 +89,30 @@ class MessageController extends AbstractController
         echo $meta->toJson();
     }
 
+    public function _action_fetch_all_teams()
+    {
+        // Ignored for now, but we can use it to only get this user's teams
+        $userId = $this->request->getParam('userId');
+        $teams = Team::all();
+        echo $teams->toJson();
+    }
+
     public function _action_fetch_all_message_filters()
     {
         $userId = $this->request->getParam('userId');
         $messageFilters = MessageFilter::with(['messages' => function($q) use($userId) {
             $q->where('aa_mi_desk_msgs_filters.userId', '=', $userId)
-                ->orderBy('aa_mi_desk_messages.subject', 'desc');
-        }])->get();
-//        foreach ($messageFilters as $messageFilter) {
-//            foreach ($messageFilter->messages as $message) {
-//                error_log("{$message->subject}\n");
-//            }
-//        }
+                ->orderBy('aa_mi_desk_messages.updatedAt', 'desc');
+        }])->where('type', 'folder')->get();
+
+        // This is kind of ugly, but get all the 'team' type filters that our user
+        // belongs to. Then we combine them with our 'folder' filters that we colleted above.
+        $user = User::with('teams')->where('id', 132)->first();
+        foreach ($user->teams as $team) {
+            $teamFilter = MessageFilter::with(['messages'])->find($team->filterId);
+            $messageFilters[]= $teamFilter;
+        }
+
         $json = $messageFilters->toJson();
         echo $json;
     }
@@ -151,7 +165,10 @@ class MessageController extends AbstractController
 
     public function _action_fetch_all_users()
     {
-        $users = User::all(['id', 'username']);
+        $users = User::all(['id', 'username', 'fname', 'lname']);
+        foreach ($users as $user) {
+            $user->name = "{$user->fname} {$user->lname}";
+        }
         $json = $users->toJson();
         echo $json;
     }

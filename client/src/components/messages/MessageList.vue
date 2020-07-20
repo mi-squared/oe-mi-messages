@@ -36,8 +36,8 @@
           <th class="message">Message</th>
           <th class="indicators">Indicators</th>
           <th class="participants">Participants</th>
-          <th class="created-date">Created</th>
-          <th class="actions">Actions</th>
+          <th class="updated-date"><!-- Updated --></th>
+          <th class="actions"><!-- Actions --></th>
         </tr>
         </thead>
         <tbody>
@@ -110,14 +110,17 @@ export default {
         })
         resultMessages = filteredMessages
       }
-      return resultMessages.sort((message1, message2) => {
-        if (moment(message1.createdAt).isBefore(moment(message2.createdAt))) {
+      // Sort the filterd messages by updated date
+      resultMessages.sort((message1, message2) => {
+        if (moment(message1.updatedAt).isBefore(moment(message2.updatedAt))) {
           return 1
-        } else if (moment(message1.createdAt).isAfter(moment(message2.createdAt))) {
+        } else if (moment(message1.updatedAt).isAfter(moment(message2.updatedAt))) {
           return -1
         }
         return 0
       })
+
+      return resultMessages
     },
     bulkStatusText () {
       return 'Change Status [' + this.selected.length + ' messages]'
@@ -162,6 +165,7 @@ export default {
   .tableFixHead {
     overflow-y: auto;
     height: 540px;
+    border-bottom: #e3e8ed;
   }
   .tableFixHead thead tr {
     border-bottom: 1px;
@@ -218,6 +222,10 @@ export default {
     font-size: 17px;
     border: none;
     cursor: pointer;
+  }
+
+  .message-list-table {
+    font-size: 12px;
   }
 
   .message-filters .search-container .search-span {

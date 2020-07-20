@@ -9,7 +9,7 @@ class File extends AbstractModel
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
-    protected $fillable = ['attachmentId', 'documentId', 'type'];
+    protected $fillable = ['attachmentId', 'documentId', 'type', 'revision'];
 
     public function document()
     {

@@ -180,8 +180,10 @@ export default new Vuex.Store({
           content: content
         }
       }).then(response => {
-        // update the new files
-        return 'success'
+        // update the new files given our attachment
+        const attachment = response.data
+        commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id }, attachmentId: attachment.id })
+        return attachment
       })
     },
 
@@ -210,6 +212,20 @@ export default new Vuex.Store({
           commit('setMessage', { message: { ...message, '.key': message.id, attachments: attachments, recipients: recipients, assignedTo: assignedTo }, messageId: message.id })
           resolve(state.messages[message.id])
         })
+      })
+    },
+
+    fetchAllTeams ({ state, commit }, { userId }) {
+      return axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!fetch_all_teams', {
+        params: {
+          userId: userId
+        }
+      }).then(response => {
+        const teams = Object.values(response.data)
+        teams.forEach(team => {
+          commit('setTeam', { team: { ...team, '.key': team.id }, teamId: team.id })
+        })
+        return teams
       })
     },
 
@@ -255,14 +271,16 @@ export default new Vuex.Store({
           })
           commit('setMessageFilter', { messageFilter: { ...messageFilter, '.key': messageFilter.id, messages: messages }, messageFilterId: messageFilter.id })
           messageFilter.messages.forEach(message => {
-            // commit message, TODO don't hard-code recipients
-            const recipients = {
-              users: {
-                2: '2',
-                3: '3'
-              },
-              teams: {}
-            }
+            const teams = {}
+            message.teams.forEach(team => {
+              teams[team.id] = team.id
+            })
+
+            const recipients = message.recipients
+            message.recipients.forEach(recipient => {
+              recipients[recipient.id] = recipient.id
+            })
+
             const assignedTo = null
             // Create attachments array where the key and value are the attachment ID
             var attachments = {}
@@ -277,7 +295,7 @@ export default new Vuex.Store({
               commit('setReply', { reply: { ...reply, '.key': reply.id }, replyId: reply.id })
             })
 
-            commit('setMessage', { message: { ...message, '.key': message.id, recipients: recipients, attachments: attachments, replies: replies, assignedTo: assignedTo }, messageId: message.id })
+            commit('setMessage', { message: { ...message, '.key': message.id, teams: teams, recipients: recipients, attachments: attachments, replies: replies, assignedTo: assignedTo }, messageId: message.id })
           })
         })
         return state.messageFilters
@@ -358,6 +376,10 @@ export default new Vuex.Store({
 
     setReply (state, { reply, replyId }) {
       Vue.set(state.replies, replyId, reply)
+    },
+
+    setTeam (state, { team, teamId }) {
+      Vue.set(state.teams, teamId, team)
     },
 
     appendReplyToMessage (state, { messageId, replyId }) {

@@ -6,6 +6,7 @@
   "teams": {
     "1": {
       "name": "intern-group",
+      "faIcon": "fa-hashtag",
       "messages": {
         "102": "102"
       },

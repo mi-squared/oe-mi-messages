@@ -42,6 +42,11 @@ export default {
         console.log(messageFilters)
       })
 
+    this.$store.dispatch('fetchAllTeams', { userId: this.$store.state.authId })
+      .then(teams => {
+        console.log(teams)
+      })
+
     this.$store.dispatch('fetchAllMessageMetaForUser', { userId: this.$store.state.authId })
       .then(messageMeta => {
         console.log(messageMeta)

@@ -1,5 +1,5 @@
 <template>
-  <tr class="message-list-item" :class="{assignable: assignable}">
+  <tr class="message-list-item" :class="{assignable: assignable, unread: unread}">
     <td><input type="checkbox" :id="checkboxId" :value="messageId" @change="onCheck" v-model="iAmSelected"></td>
     <td class="toolbar-column">
       <ul class="toolbar">
@@ -13,7 +13,7 @@
     </td>
     <td class="view-details" @click="viewMessage()">
       <div class="subject">
-        <span :class="{unread : unread}">{{message.subject}}</span>
+        <span>{{message.subject}}</span>
         <TagItem
           v-for="tag in tags"
           :tag="tag"
@@ -38,18 +38,18 @@
     </td>
     <td>
       <div>
-        <span :class="{unread : unread}">{{fromName}}</span>
+        <span>{{fromName}}</span>
       </div>
       <div class="actors">
         <AppTeam v-for="team in teamRecipients" :team="team" :key="team['.key']"/>&nbsp;
         <span class="recipient-list">{{recipientsList}}</span>
       </div>
     </td>
-    <td><span :class="{unread : unread}"><AppDate :timestamp="this.message.createdAt"/></span></td>
+    <td><span><AppDate :timestamp="this.message.updatedAt"/></span></td>
     <td class="actions-column">
       <ul class="toolbar">
-        <li v-if="isAssigned"><a href="#" ><img class="avatar" :src="assignedUser.avatar"></a></li>
-        <li v-else><a href="#"><span class="avatar empty">&nbsp;</span></a></li>
+<!--        <li v-if="isAssigned"><a href="#" ><img class="avatar" :src="assignedUser.avatar"></a></li>-->
+<!--        <li v-else><a href="#"><span class="avatar empty">&nbsp;</span></a></li>-->
 <!--        <li v-if="assignable && !isAssigned"><a @click="takeOwnership" ><span class="fa fa-hand-paper" :class="{assignable: assignable}"></span></a></li>-->
 <!--        <li v-else><a href=""><span class="fa fa-hand-paper"></span></a></li>-->
         <li>
@@ -57,8 +57,8 @@
             <div class="popper">
               <a v-if="listId == 1" class="popper-item" @click="moveToArchive()"><span class="fa fa-archive"></span> Archive</a>
               <a v-else class="popper-item" @click="moveToInbox()"><span class="fa fa-inbox"></span> Inbox</a>
-              <a v-if="unread" class="popper-item" @click="markAsRead()"><span class="fa fa-eye-slash"></span> Mark as Read</a>
-              <a v-else class="popper-item" @click="markAsUnread()"><span class="fa fa-eye"></span> Mark as Unread</a>
+              <a v-if="unread" class="popper-item" @click="markAsRead()"><span class="fa fa-envelope-open"></span> Mark as Read</a>
+              <a v-else class="popper-item" @click="markAsUnread()"><span class="fas fa-envelope"></span> Mark as Unread</a>
             </div>
 
             <a href="#" slot="reference"><span class="message-item-more-actions fa fa-ellipsis-v"></span></a>
@@ -243,10 +243,10 @@ export default {
       }
     },
     recipientsList () {
-      return Object.keys(this.message.recipients.users).map(userId => { return this.$store.state.users[userId].name }).join(', ')
+      return Object.keys(this.message.recipients).map(userId => { return this.$store.state.users[userId].name }).join(', ')
     },
     teamRecipients () {
-      return Object.keys(this.message.recipients.teams).map(teamId => { return this.$store.state.teams[teamId] })
+      return Object.keys(this.message.teams).map(teamId => { return this.$store.state.teams[teamId] })
     }
   }
 }
@@ -303,7 +303,7 @@ export default {
   }
 
   .message-list-item {
-    border-left: $primary;
+    border-left: #e3e8ed;
     border-left-style: none;
     border-left-style: solid;
   }

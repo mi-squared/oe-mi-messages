@@ -4,9 +4,17 @@
       <div class="back-button" @click="back()"><span class="fa fa-arrow-left"></span></div>
       <h1>{{message.subject}}</h1>
       <AppTeam v-for="team in teamRecipients" :team="team" :key="team['.key']"/>
-      <ul class="message-actions">
-        <li><StatusPopper :status="messageStatus" @change-message-status="changeMessageStatus"></StatusPopper></li>
-      </ul>
+      <div class="message-actions-container">
+        <ul class="message-actions">
+          <li>
+            <a @click="doReply" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+              <i class="fa fa-reply"></i>
+              Reply
+            </a>
+          </li>
+          <li><StatusPopper :status="messageStatus" @change-message-status="changeMessageStatus"></StatusPopper></li>
+        </ul>
+      </div>
     </nav>
     <div v-if="assignable">
       Assignee
@@ -17,7 +25,7 @@
       <div class="reply-item">
         <div class="media g-mb-30 media-comment">
           <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15"
-               :src="from.avatar" :alt="from.name">
+               :src="from.avatar" :alt="initials">
           <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
             <div class="g-mb-15">
               <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ from.name }}</h5>
@@ -37,7 +45,6 @@
         </div>
       </div>
       <ReplyList :message="message"/>
-      <div id="scroll-to-me"></div>
       <div v-if="isReplying" class="message-editor">
         <TextEditor @updateContent="replyText = $event"/>
         <div class="message-editor-actions-container">
@@ -55,7 +62,7 @@
         <div class="message-editor-actions-container">
           <ul class="message-editor-actions">
             <li>
-              <a v-if="!isReplying" @click="isReplying = true" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
+              <a v-if="!isReplying" @click="doReply" class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#">
                 <i class="fa fa-reply"></i>
                 Reply
               </a>
@@ -123,6 +130,9 @@ export default {
         return true
       }
     },
+    initials () {
+      return this.from.name.match(/\b(\w)/g).join('').toUpperCase()
+    },
     assignedUser () {
       const assignedToUser = this.$store.state.users[this.message.assignedTo]
       return assignedToUser
@@ -133,6 +143,9 @@ export default {
       } else {
         return false
       }
+    },
+    meta () {
+      return this.$store.state.messageMeta[this.messageId]
     },
     recipientsList () {
       return Object.keys(this.message.recipients.users).map(userId => { return this.$store.state.users[userId].name }).join(', ')
@@ -149,6 +162,15 @@ export default {
     }
   },
   methods: {
+    doReply () {
+      this.isReplying = true
+      const el = document.getElementById('message-view')
+      el.scrollTop = el.scrollHeight
+    },
+    markAsRead () {
+      this.meta.isRead = 1
+      this.$store.dispatch('setMessageMeta', { message: this.message, meta: this.meta, userId: this.$store.state.authId })
+    },
     back () {
       this.$router.back()
     },
@@ -164,8 +186,7 @@ export default {
     }
   },
   mounted () {
-    const el = document.getElementById('message-view')
-    el.scrollTop = el.scrollHeight
+    this.markAsRead()
   },
   created () {
     this.$store.dispatch('fetchMessage', { messageId: this.messageId })
@@ -197,6 +218,7 @@ export default {
     padding: 1.5rem;
     margin-bottom: 80px;
     margin-left: 44px;
+    min-height: 340px;
   }
 
   .message-view-container {
@@ -218,8 +240,20 @@ export default {
     border-width: .2rem;
   }
 
+  .message-actions-container {
+    float: right;
+  }
+
   ul.message-actions {
     list-style-type: none;
+    display: block;
+    float: right;
+    margin-bottom: 0px;
+  }
+  ul.message-actions li {
+    display:inline-block;
+    float: right;
+    padding: 8px;
   }
 
   ul.message-editor-actions {
