@@ -3,7 +3,7 @@
     <nav class="navbar navbar-dark sticky-top">
       <h1 class="navbar-brand">{{ filename }}</h1>
       <ul class="nav navbar-nav ml-auto">
-        <li v-if="edit"><a href="#" @click.prevent="doView()"><span class="fas fa-eye"></span></a></li>
+        <li v-if="isEditMode"><a href="#" @click.prevent="doView()"><span class="fas fa-eye"></span></a></li>
         <li v-else><a href="#" @click.prevent="doEdit()"><span class="fas fa-edit"></span></a></li>
         <li><a href="#" @click.prevent="downloadWithAxios()"><span class="fas fa-download"></span></a></li>
         <li><a href="#" @click.prevent="$refs.pdf[0].print()"><span class="fas fa-print"></span></a></li>
@@ -11,7 +11,7 @@
       </ul>
     </nav>
     <div class="canvas-container">
-      <div v-if="!edit">
+      <div v-if="!isEditMode">
         <pdf
           ref="pdf"
           class="canvas"
@@ -23,9 +23,10 @@
       </div>
       <div v-else>
         <tinymce
+          ref="tinymce"
           id="tinymce-editor"
-          @on-save="save()"
-          v-model="editorContent"
+          @on-save="save"
+          :value="editorContent"
           :plugins="plugins"
           :toolbar1="toolbar1"
           :toolbar2="toolbar2"
@@ -62,6 +63,7 @@ export default {
   },
   data () {
     return {
+      isEditMode: false,
       numPages: undefined,
       editorContent: '',
       tinyOptions: {
@@ -100,15 +102,17 @@ export default {
     }
   },
   watch: {
-    edit: function (newVal, oldVal) {
+    isEditMode: function (newVal) {
+      const vm = this
       if (newVal === false && this.pdfFile.properties.url) {
         loadingTask = pdf.createLoadingTask(this.pdfFile.properties.url)
         loadingTask.promise.then(pdf => {
-          this.numPages = pdf.numPages
+          vm.numPages = pdf.numPages
         })
       } else if (newVal === true && this.htmlFile.properties.url) {
         axios.get(this.htmlFile.properties.url).then(response => {
-          this.editorContent = response.data
+          vm.editorContent = response.data
+          // vm.$refs.tinymce.value = response.data
         })
       }
     }
@@ -129,7 +133,7 @@ export default {
       return theFile
     },
     closeFile () {
-      if (this.edit) {
+      if (this.isEditMode) {
         this.$router.go(-2)
       } else {
         this.$router.back()
@@ -137,33 +141,18 @@ export default {
     },
 
     doEdit () {
-      this.$router.push({
-        name: 'PagePDFEdit', // This is defined in router, basically this page with edit mode
-        params: {
-          attachmentId: this.attachmentId,
-          edit: true
-        }
-      })
+      this.isEditMode = true
     },
 
     doView () {
-      this.$router.push({
-        name: 'PagePDFVue', // This is defined in router
-        params: {
-          attachmentId: this.attachmentId,
-          edit: false
-        }
-      })
+      this.isEditMode = false
     },
 
-    save () {
+    save (content) {
+      this.editorContent = content
       this.$store.dispatch('pushHtml', {
         file: this.htmlFile,
-        content: this.editorContent
-      }).then(attachment => {
-        // Get the updated attachment back, but we don't need to reset, because the ID is the same, just revision number
-        // and files are changed
-        // this.attachmentId = attachment['.key']
+        content: content
       })
     },
 
@@ -189,13 +178,14 @@ export default {
     }
   },
   mounted () {
+    this.isEditMode = this.edit
     // TODO This was global before, may not work??
-    if (this.edit === false && this.pdfFile.properties.url) {
+    if (this.isEditMode === false && this.pdfFile.properties.url) {
       loadingTask = pdf.createLoadingTask(this.pdfFile.properties.url)
       loadingTask.promise.then(pdf => {
         this.numPages = pdf.numPages
       })
-    } else if (this.edit === true && this.htmlFile.properties.url) {
+    } else if (this.isEditMode === true && this.htmlFile.properties.url) {
       axios.get(this.htmlFile.properties.url).then(response => {
         this.editorContent = response.data
       })
