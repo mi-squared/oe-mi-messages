@@ -17,7 +17,7 @@
           class="canvas"
           v-for="i in numPages"
           :key="i"
-          :src="url"
+          :src="pdfFile.properties.url"
           :page="i"
         ></pdf>
       </div>
@@ -51,7 +51,7 @@ export default {
     pdf
   },
   props: {
-    fileId: {
+    attachmentId: {
       required: true,
       type: String
     },
@@ -83,15 +83,13 @@ export default {
   },
   computed: {
     attachment () {
-      return this.$store.state.attachments[this.file.attachmentId]
+      return this.$store.state.attachments[this.attachmentId]
     },
-    file () {
-      return this.$store.state.files[this.fileId]
+    pdfFile () {
+      return this.getFileOfType('pdf')
     },
-    url () {
-      const url = this.file.pointer
-      return url
-      // return '/PT_Complex.pdf'
+    htmlFile () {
+      return this.getFileOfType('html')
     },
     htmlValue () {
       // Get the HTML value of content
@@ -102,20 +100,34 @@ export default {
     }
   },
   watch: {
-    fileId: function (newVal, oldVal) {
-      if (this.url && this.edit === false) {
-        loadingTask = pdf.createLoadingTask(this.url)
+    edit: function (newVal, oldVal) {
+      if (newVal === false && this.pdfFile.properties.url) {
+        loadingTask = pdf.createLoadingTask(this.pdfFile.properties.url)
         loadingTask.promise.then(pdf => {
           this.numPages = pdf.numPages
         })
-      } else if (this.url && this.edit === true) {
-        axios.get(this.url).then(response => {
+      } else if (newVal === true && this.htmlFile.properties.url) {
+        axios.get(this.htmlFile.properties.url).then(response => {
           this.editorContent = response.data
         })
       }
     }
   },
   methods: {
+    getFileOfType (type) {
+      let theFile = {}
+      Object.values(this.attachment.files).forEach(fileId => {
+        const aFile = this.$store.state.files[fileId]
+        if (aFile.type === type &&
+          aFile.revision === this.attachment.revision) {
+          theFile = aFile
+        } else if (aFile.type === type &&
+          aFile.revision === this.attachment.revision) {
+          theFile = aFile
+        }
+      })
+      return theFile
+    },
     closeFile () {
       if (this.edit) {
         this.$router.go(-2)
@@ -125,27 +137,33 @@ export default {
     },
 
     doEdit () {
-      // make the call to service, and get HTML
-      this.$store.dispatch('fetchHtml', { attachment: this.attachment })
-        .then(file => {
-          this.$router.push({
-            name: 'PagePDFEdit', // This is defined in router, basically this page with edit mode
-            params: {
-              fileId: file['.key'],
-              edit: true
-            }
-          })
-        })
+      this.$router.push({
+        name: 'PagePDFEdit', // This is defined in router, basically this page with edit mode
+        params: {
+          attachmentId: this.attachmentId,
+          edit: true
+        }
+      })
     },
 
     doView () {
-      this.$router.back()
+      this.$router.push({
+        name: 'PagePDFVue', // This is defined in router
+        params: {
+          attachmentId: this.attachmentId,
+          edit: false
+        }
+      })
     },
 
     save () {
       this.$store.dispatch('pushHtml', {
-        file: this.file,
+        file: this.htmlFile,
         content: this.editorContent
+      }).then(attachment => {
+        // Get the updated attachment back, but we don't need to reset, because the ID is the same, just revision number
+        // and files are changed
+        // this.attachmentId = attachment['.key']
       })
     },
 
@@ -161,7 +179,7 @@ export default {
     downloadWithAxios () {
       axios({
         method: 'get',
-        url: this.url,
+        url: this.pdfFile.properties.url,
         responseType: 'arraybuffer'
       })
         .then(response => {
@@ -172,13 +190,13 @@ export default {
   },
   mounted () {
     // TODO This was global before, may not work??
-    if (this.url && this.edit === false) {
-      loadingTask = pdf.createLoadingTask(this.url)
+    if (this.edit === false && this.pdfFile.properties.url) {
+      loadingTask = pdf.createLoadingTask(this.pdfFile.properties.url)
       loadingTask.promise.then(pdf => {
         this.numPages = pdf.numPages
       })
-    } else if (this.url) {
-      axios.get(this.url).then(response => {
+    } else if (this.edit === true && this.htmlFile.properties.url) {
+      axios.get(this.htmlFile.properties.url).then(response => {
         this.editorContent = response.data
       })
     }

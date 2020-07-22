@@ -158,7 +158,7 @@ export default new Vuex.Store({
     },
 
     fetchHtml ({ state, commit }, { attachment }) {
-      // Given an attachment DOCX, ask the server for a PDF version
+      // Given an attachment DOCX, ask the server for a HTML version
       return axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=file!fetch_html', {
         params: {
           attachmentId: attachment['.key']
@@ -182,7 +182,12 @@ export default new Vuex.Store({
       }).then(response => {
         // update the new files given our attachment
         const attachment = response.data
-        commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id }, attachmentId: attachment.id })
+        var files = {}
+        attachment.files.forEach(file => {
+          files[file.id] = file.id
+          commit('setFile', { file: { ...file, '.key': file.id }, fileId: file.id })
+        })
+        commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id, files: files }, attachmentId: attachment.id })
         return attachment
       })
     },
@@ -200,14 +205,8 @@ export default new Vuex.Store({
           message.attachments.forEach(attachment => {
             attachments[attachment.id] = attachment.id
           })
-          // commit message, TODO don't hard-code recipients
-          const recipients = {
-            users: {
-              2: '2',
-              3: '3'
-            },
-            teams: {}
-          }
+          // commit message, TODO recipients and teams no longer used on the message object
+          const recipients = {}
           const assignedTo = null
           commit('setMessage', { message: { ...message, '.key': message.id, attachments: attachments, recipients: recipients, assignedTo: assignedTo }, messageId: message.id })
           resolve(state.messages[message.id])
@@ -285,8 +284,13 @@ export default new Vuex.Store({
             // Create attachments array where the key and value are the attachment ID
             var attachments = {}
             message.attachments.forEach(attachment => {
+              var files = {}
+              attachment.files.forEach(file => {
+                files[file.id] = file.id
+                commit('setFile', { file: { ...file, '.key': file.id }, fileId: file.id })
+              })
               attachments[attachment.id] = attachment.id
-              commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id }, attachmentId: attachment.id })
+              commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id, files: files }, attachmentId: attachment.id })
             })
 
             var replies = {}

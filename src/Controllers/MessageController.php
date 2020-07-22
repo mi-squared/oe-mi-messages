@@ -107,7 +107,7 @@ class MessageController extends AbstractController
 
         // This is kind of ugly, but get all the 'team' type filters that our user
         // belongs to. Then we combine them with our 'folder' filters that we colleted above.
-        $user = User::with('teams')->where('id', 132)->first();
+        $user = User::with('teams')->where('id', $userId)->first();
         foreach ($user->teams as $team) {
             $teamFilter = MessageFilter::with(['messages'])->find($team->filterId);
             $messageFilters[]= $teamFilter;

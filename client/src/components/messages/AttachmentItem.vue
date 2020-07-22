@@ -6,6 +6,8 @@
 </template>
 
 <script>
+// import axios from 'axios'
+
 export default {
   name: 'AttachmentItem',
   props: {
@@ -18,18 +20,16 @@ export default {
     viewAttachment () {
       // If the file is a PDF, open the viewer
       if (this.attachment.type === 'document') {
-        // make the call to service, and get PDF
-        this.$store.dispatch('fetchPreview', { attachment: this.attachment })
-          .then(file => {
-            this.$router.push({
-              name: 'PagePDFVue',
-              params: {
-                fileId: file['.key']
-              }
-            })
-          })
+        this.$router.push({
+          name: 'PagePDFVue',
+          params: {
+            attachmentId: this.attachment['.key']
+          }
+        })
+      } else if (this.attachment.type === 'patient') {
+        top.restoreSession()
+        top.RTop.location = '/interface/patient_file/summary/demographics.php?set_pid=' + encodeURIComponent(this.attachment.properties.pid)
       }
-      // this.$store.dispatch('openFile', this.file)
     }
   },
   computed: {

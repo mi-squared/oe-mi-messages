@@ -16,6 +16,9 @@
           <a href="#" slot="reference" class="right"><span class="btn select-all-options fa fa-caret-down"></span></a>
         </Popper>
       </div>
+      <div>
+        <a href="#" class="right" @click="onRefresh()"><span class="btn fa fa-sync"></span></a>
+      </div>
       <div class="search-container">
         <form>
           <input type="text" placeholder="Search..." name="search" v-model="search">
@@ -113,9 +116,9 @@ export default {
       // Sort the filterd messages by updated date
       resultMessages.sort((message1, message2) => {
         if (moment(message1.updatedAt).isBefore(moment(message2.updatedAt))) {
-          return 1
-        } else if (moment(message1.updatedAt).isAfter(moment(message2.updatedAt))) {
           return -1
+        } else if (moment(message1.updatedAt).isAfter(moment(message2.updatedAt))) {
+          return 1
         }
         return 0
       })
@@ -127,6 +130,11 @@ export default {
     }
   },
   methods: {
+    onRefresh () {
+      this.$store.dispatch('fetchAllMessageFilters', { userId: this.$store.state.authId }).then(filters => {
+        console.log(filters)
+      })
+    },
     onMessageSelected (messageId) {
       Object.values(this.messages).forEach(message => {
         if (message['.key'] === messageId) {
