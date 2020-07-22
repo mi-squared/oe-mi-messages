@@ -169,7 +169,12 @@ export default {
     },
     markAsRead () {
       this.meta.isRead = 1
-      this.$store.dispatch('setMessageMeta', { message: this.message, meta: this.meta, userId: this.$store.state.authId })
+      this.$store.dispatch('setMessageMeta', {
+        message: this.message,
+        meta: this.meta,
+        userId:
+        this.$store.state.authId
+      })
     },
     back () {
       this.$router.back()

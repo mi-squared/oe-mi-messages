@@ -184,11 +184,14 @@ export default new Vuex.Store({
         const attachment = response.data
         var files = {}
         attachment.files.forEach(file => {
-          files[file.id] = file.id
-          commit('setFile', { file: { ...file, '.key': file.id }, fileId: file.id })
+          if (file.revision === attachment.revision) {
+            files[file.id] = file.id
+            commit('setFile', { file: { ...file, '.key': file.id }, fileId: file.id })
+          }
         })
-        commit('setAttachment', { attachment: { ...attachment, '.key': attachment.id, files: files }, attachmentId: attachment.id })
-        return attachment
+        const updatedAttachment = { ...attachment, '.key': attachment.id, files: files }
+        commit('setAttachment', { attachment: updatedAttachment, attachmentId: attachment.id })
+        return updatedAttachment
       })
     },
 

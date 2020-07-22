@@ -153,6 +153,8 @@ export default {
       this.$store.dispatch('pushHtml', {
         file: this.htmlFile,
         content: content
+      }).then(attachment => {
+        console.log('revision is now at:' + attachment.revision)
       })
     },
 

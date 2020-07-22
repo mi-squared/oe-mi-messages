@@ -138,7 +138,10 @@ class MessageController extends AbstractController
         $messageId = $this->request->getParam('messageId');
         $userId = $this->request->getParam('userId');
         $meta = $this->request->getParam('meta');
-        $messageMeta = MessageMeta::find($meta['id']);
+        $messageMeta = MessageMeta::firstOrNew([
+            'userId' => $userId,
+            'messageId' => $messageId
+        ]);
         if ($messageMeta) {
             $fillable = [];
             foreach ($messageMeta->getFillable() as $f) {

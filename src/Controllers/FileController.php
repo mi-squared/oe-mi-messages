@@ -34,11 +34,12 @@ class FileController extends AbstractController
         $file = File::find($fileId);
         // Write new files and revisions
         $attachment = Attachment::find($file->attachmentId);
-        DocumentService::createFromHtml($content, $attachment);
-        $revision = $attachment->revision;
-        $attachment = Attachment::find($file->attachmentId)->with(['files' => function($q) use($revision) {
-            $q->where('aa_mi_desk_files.revision', '=', $revision);
-        }])->first();
+        $attachment = DocumentService::createFromHtml($content, $attachment);
+        $attachment->refresh();
+//        $revision = $attachment->revision;
+//        $attachment = Attachment::find($file->attachmentId)->with(['files' => function($q) use($revision) {
+//            $q->where('aa_mi_desk_files.revision', '=', $revision);
+//        }])->first();
         echo $attachment->toJson();
     }
 
