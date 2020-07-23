@@ -90,6 +90,22 @@ export default new Vuex.Store({
         return response.data
       })
     },
+    setMessageAsRead ({ commit, dispatch }, { message, userId }) {
+      let meta = {}
+      if (this.state.messageMeta[message['.key']]) {
+        meta = this.state.messageMeta[message['.key']]
+      }
+      meta.isRead = 1
+      dispatch('setMessageMeta', { message: message, userId: userId, meta: meta })
+    },
+    setMessageAsUnread ({ commit, dispatch }, { message, userId }) {
+      let meta = {}
+      if (this.state.messageMeta[message['.key']]) {
+        meta = this.state.messageMeta[message['.key']]
+      }
+      meta.isRead = 0
+      dispatch('setMessageMeta', { message: message, userId: userId, meta: meta })
+    },
     setMessageMeta ({ commit }, { message, userId, meta }) {
       return axios.post(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php', {
         action: 'message!set_message_meta',

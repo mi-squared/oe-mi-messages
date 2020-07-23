@@ -7,7 +7,7 @@ class MessageMeta extends AbstractModel
     protected $table = 'aa_mi_desk_message_meta';
 
     protected $fillable = [
-        'userId', 'messageId', 'meta', 'isRead', 'isOpen'
+        'userId', 'messageId', 'isRead', 'isOpen', 'properties'
     ];
 
     const CREATED_AT = 'createdAt';
@@ -17,6 +17,6 @@ class MessageMeta extends AbstractModel
      * Cast our JSON properties to an array
      */
     protected $casts = [
-        'meta' => 'array'
+        'properties' => 'array'
     ];
 }

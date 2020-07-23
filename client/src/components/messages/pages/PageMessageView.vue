@@ -168,10 +168,8 @@ export default {
       el.scrollTop = el.scrollHeight
     },
     markAsRead () {
-      this.meta.isRead = 1
-      this.$store.dispatch('setMessageMeta', {
+      this.$store.dispatch('setMessageAsRead', {
         message: this.message,
-        meta: this.meta,
         userId:
         this.$store.state.authId
       })

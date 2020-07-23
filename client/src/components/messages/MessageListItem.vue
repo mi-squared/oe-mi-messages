@@ -116,12 +116,10 @@ export default {
       this.$store.dispatch('moveToList', { message: this.message, fromListId: this.listId, toListId: 1, userId: this.$store.state.authId })
     },
     markAsRead () {
-      this.meta.isRead = 1
-      this.$store.dispatch('setMessageMeta', { message: this.message, meta: this.meta, userId: this.$store.state.authId })
+      this.$store.dispatch('setMessageAsRead', { message: this.message, userId: this.$store.state.authId })
     },
     markAsUnread () {
-      this.meta.isRead = 0
-      this.$store.dispatch('setMessageMeta', { message: this.message, meta: this.meta, userId: this.$store.state.authId })
+      this.$store.dispatch('setMessageAsUnread', { message: this.message, userId: this.$store.state.authId })
     },
     takeOwnership () {
       this.$store.dispatch('takeOwnership', { message: this.message, userId: this.$store.state.authId })
