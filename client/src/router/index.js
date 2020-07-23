@@ -14,7 +14,7 @@ const routes = [
     path: '/',
     // name: 'Home',
     // component: Home
-    redirect: '/messages'
+    redirect: '/messages/list/1'
   },
   {
     path: '/about',

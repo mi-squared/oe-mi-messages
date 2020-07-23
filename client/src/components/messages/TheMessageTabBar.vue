@@ -2,7 +2,7 @@
   <div class="tab-bar-row">
     <nav class="navbar navbar-expand-md tab-bar">
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li v-if="showNew" class="nav-item">
           <router-link :to="{ name: 'PageMessageCreate' }" class="nav-link d-flex">
             <div class="d-flex">
               <span>New</span>
@@ -30,6 +30,11 @@ export default {
       required: true,
       type: Array
     }
+  },
+  computed: {
+    showNew () {
+      return this.$store.state.userState.showNew
+    }
   }
 }
 </script>
@@ -37,5 +42,8 @@ export default {
 <style scoped>
   .tab-new {
     background: rgba(0,0,0,0);
+  }
+  .tab-bar-row {
+    min-height: 54px;
   }
 </style>

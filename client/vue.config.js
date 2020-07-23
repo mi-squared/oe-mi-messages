@@ -1,3 +1,8 @@
+let messages_base_path = '/interface/modules/custom_modules/oe-mi-messages/client';
+if (process.env.NODE_ENV === 'production') {
+  messages_base_path = messages_base_path + '/dist'
+}
+
 module.exports = {
   css: {
     loaderOptions: {
@@ -9,7 +14,7 @@ module.exports = {
       }
     }
   },
-  publicPath: '/interface/modules/custom_modules/oe-mi-messages/client',
+  publicPath: messages_base_path,
   devServer: {
     disableHostCheck: true,
     headers: {

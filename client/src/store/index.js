@@ -211,11 +211,11 @@ export default new Vuex.Store({
       })
     },
 
-    fetchMessage ({ state, commit }, { id }) {
+    fetchMessage ({ state, commit }, { messageId }) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!fetch_message', {
           params: {
-            id: id
+            id: messageId
           }
         }).then(function (response) {
           const message = response.data
@@ -260,7 +260,7 @@ export default new Vuex.Store({
           }
         }).then(function (response) {
           const allMessageMeta = response.data
-          allMessageMeta.forEach(messageMeta => {
+          Object.values(allMessageMeta).forEach(messageMeta => {
             commit('setMessageMeta', { messageMeta: { ...messageMeta, '.key': messageMeta.messageId }, messageId: messageMeta.messageId })
           })
           resolve(state.messageMeta)

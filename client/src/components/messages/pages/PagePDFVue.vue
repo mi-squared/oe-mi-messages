@@ -5,7 +5,16 @@
       <ul class="nav navbar-nav ml-auto">
         <li v-if="isEditMode"><a href="#" @click.prevent="doView()"><span class="fas fa-eye"></span></a></li>
         <li v-else><a href="#" @click.prevent="doEdit()"><span class="fas fa-edit"></span></a></li>
-        <li><a href="#" @click.prevent="downloadWithAxios()"><span class="fas fa-download"></span></a></li>
+        <li>
+          <Popper ref="download-popper" trigger="clickToToggle" :stopPropagation="true" :options="{ placement: 'bottom' }">
+            <div class="popper">
+              <a href="#" class="popper-item" @click.prevent="downloadPdfWithAxios()">PDF</a>
+              <a href="#" class="popper-item" @click.prevent="downloadDocWithAxios()">MS Word</a>
+            </div>
+
+            <a href="#" slot="reference"><span class="fas fa-download"></span></a>
+          </Popper>
+        </li>
         <li><a href="#" @click.prevent="$refs.pdf[0].print()"><span class="fas fa-print"></span></a></li>
         <li><a href="#" @click.prevent ="closeFile()"><span class="fas fa-times"></span></a></li>
       </ul>
@@ -43,13 +52,15 @@
 import pdf from 'vue-pdf'
 import axios from 'axios'
 import tinymce from 'vue-tinymce-editor'
+import Popper from 'vue-popperjs'
 
 var loadingTask = ''
 
 export default {
   components: {
     tinymce,
-    pdf
+    pdf,
+    Popper
   },
   props: {
     attachmentId: {
@@ -93,6 +104,13 @@ export default {
     htmlFile () {
       return this.getFileOfType('html')
     },
+    docFile () {
+      let docfile = this.getFileOfType('doc')
+      if (!docfile) {
+        docfile = this.getFileOfType('docx')
+      }
+      return docfile
+    },
     htmlValue () {
       // Get the HTML value of content
       return ''
@@ -119,7 +137,7 @@ export default {
   },
   methods: {
     getFileOfType (type) {
-      let theFile = {}
+      let theFile = null
       Object.values(this.attachment.files).forEach(fileId => {
         const aFile = this.$store.state.files[fileId]
         if (aFile.type === type &&
@@ -133,11 +151,7 @@ export default {
       return theFile
     },
     closeFile () {
-      if (this.isEditMode) {
-        this.$router.go(-2)
-      } else {
-        this.$router.back()
-      }
+      this.$router.back()
     },
 
     doEdit () {
@@ -158,25 +172,37 @@ export default {
       })
     },
 
-    forceFileDownload (response) {
+    forceFileDownload (response, type) {
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', this.filename + '.' + this.file.type) // or any other extension
+      link.setAttribute('download', this.filename + '.' + type) // or any other extension
       document.body.appendChild(link)
       link.click()
     },
 
-    downloadWithAxios () {
+    downloadPdfWithAxios () {
       axios({
         method: 'get',
         url: this.pdfFile.properties.url,
         responseType: 'arraybuffer'
+      }).then(response => {
+        this.forceFileDownload(response, this.pdfFile.type)
+      }).catch(error => {
+        console.log(error)
       })
-        .then(response => {
-          this.forceFileDownload(response)
-        })
-        .catch(() => console.log('error occured'))
+    },
+
+    downloadDocWithAxios () {
+      axios({
+        method: 'get',
+        url: this.docFile.properties.url,
+        responseType: 'arraybuffer'
+      }).then(response => {
+        this.forceFileDownload(response, this.docFile.type)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
@@ -197,7 +223,12 @@ export default {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .popper a.popper-item {
+    color: $primary;
+    display: block;
+  }
+
   #tinymce-editor > div {
     height: 100% !important;
     overflow: hidden !important;

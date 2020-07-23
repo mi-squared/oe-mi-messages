@@ -1,3 +1,4 @@
+<script src="../../../store/index.js"></script>
 <template>
   <div class="message-view-container">
     <nav class="navbar navbar-expand-md message-bar">

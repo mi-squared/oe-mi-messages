@@ -1,7 +1,8 @@
 {
   "userState": {
     "openTabs": {},
-    "activeFilter": "1"
+    "activeFilter": "1",
+    "showNew": false
   },
   "teams": {
     "1": {
