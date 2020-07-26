@@ -49,7 +49,7 @@ export default new Vuex.Store({
     authId: '4' // Batman
   },
   actions: {
-    loadPatient ({ commit, state}, { pid }) {
+    loadPatient ({ commit, state }, { pid }) {
       top.restoreSession()
       top.RTop.location = baseUrl + '/interface/patient_file/summary/demographics.php?set_pid=' + encodeURIComponent(pid)
     },
