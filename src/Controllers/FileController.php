@@ -18,6 +18,7 @@ use Mi2\Messages\Models\Message;
 use Mi2\Messages\Models\MessageFilter;
 use Mi2\Messages\Models\User;
 use PerfectTranscription\DocumentService;
+use PerfectTranscription\PerfectTranscriptionService;
 
 //use PatientPrivacy\PatientPrivacyService;
 
@@ -53,7 +54,8 @@ class FileController extends AbstractController
                 $document = new \Document($file->documentId);
                 $pid = $document->get_foreign_id();
                 // /controller.php?document&retrieve&patient_id=2&document_id=1643&as_file=true
-                $file->pointer = "/controller.php?document&retrieve&patient_id=$pid&document_id={$file->documentId}&as_file=true";
+                $baseUrl = PerfectTranscriptionService::$baseUrl;
+                $file->pointer =  "{$baseUrl}/controller.php?document&retrieve&patient_id=$pid&document_id={$file->documentId}&as_file=true";
                 break;
             }
         }
