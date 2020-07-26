@@ -193,10 +193,10 @@ export default {
     this.markAsRead()
   },
   created () {
-    this.$store.dispatch('fetchMessage', { messageId: this.messageId })
-      .then(message => {
-        console.log(message.subject)
-      })
+    // this.$store.dispatch('fetchMessage', { messageId: this.messageId })
+    //   .then(message => {
+    //     console.log(message.subject)
+    //   })
   }
 }
 </script>

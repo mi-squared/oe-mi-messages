@@ -143,11 +143,11 @@ class MessageController extends AbstractController
             'messageId' => $messageId
         ]);
         if ($messageMeta) {
-            $fillable = [];
-            foreach ($messageMeta->getFillable() as $f) {
-                $fillable[$f] = $meta[$f];
+            foreach ($meta as $key => $value) {
+                if (in_array($key, $messageMeta->getFillable())) {
+                    $messageMeta->{$key} = $value;
+                }
             }
-            $messageMeta->fill($fillable);
             $messageMeta->save();
         }
 

@@ -216,6 +216,7 @@ export default new Vuex.Store({
     },
 
     fetchMessage ({ state, commit }, { messageId }) {
+      // TODO !!!! This function is broken, because it doesn't get teams and other stuff needed and IS NOT USED currently
       return new Promise((resolve, reject) => {
         axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!fetch_message', {
           params: {

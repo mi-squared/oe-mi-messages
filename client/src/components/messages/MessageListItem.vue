@@ -244,7 +244,12 @@ export default {
       return Object.keys(this.message.recipients).map(userId => { return this.$store.state.users[userId].name }).join(', ')
     },
     teamRecipients () {
-      return Object.keys(this.message.teams).map(teamId => { return this.$store.state.teams[teamId] })
+      if (this.message.teams) {
+        return Object.keys(this.message.teams).map(teamId => {
+          return this.$store.state.teams[teamId]
+        })
+      }
+      return []
     }
   }
 }
