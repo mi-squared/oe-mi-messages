@@ -370,3 +370,9 @@ ALTER TABLE `aa_mi_desk_users_teams`
 --
 ALTER TABLE `aa_pt_notifications`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+
+INSERT INTO `aa_mi_desk_filters` (`id`, `createdAt`, `updatedAt`, `type`, `name`, `faIcon`) VALUES
+(1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'folder', 'Inbox', 'fa-inbox'),
+(2, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'folder', 'Sent', 'fa-paper-plane'),
+(3, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'folder', 'Archive', 'fa-archive');

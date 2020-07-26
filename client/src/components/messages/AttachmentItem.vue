@@ -27,8 +27,7 @@ export default {
           }
         })
       } else if (this.attachment.type === 'patient') {
-        top.restoreSession()
-        top.RTop.location = '/interface/patient_file/summary/demographics.php?set_pid=' + encodeURIComponent(this.attachment.properties.pid)
+        this.$store.dispatch('loadPatient', { pid: this.attachment.properties.pid })
       }
     }
   },

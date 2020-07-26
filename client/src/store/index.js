@@ -49,6 +49,10 @@ export default new Vuex.Store({
     authId: '4' // Batman
   },
   actions: {
+    loadPatient ({ commit, state}, { pid }) {
+      top.restoreSession()
+      top.RTop.location = baseUrl + '/interface/patient_file/summary/demographics.php?set_pid=' + encodeURIComponent(pid)
+    },
     openMessage ({ commit, state }, message) {
       const messageId = message['.key']
       return axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!open_message', {
