@@ -115,10 +115,12 @@ export default {
       }
       // Sort the filterd messages by updated date
       resultMessages.sort((message1, message2) => {
-        if (moment(message1.updatedAt).isBefore(moment(message2.updatedAt))) {
-          return -1
-        } else if (moment(message1.updatedAt).isAfter(moment(message2.updatedAt))) {
+        const moment1 = moment(message1.updatedAt)
+        const moment2 = moment(message2.updatedAt)
+        if (moment1.isBefore(moment2)) {
           return 1
+        } else if (moment2.isBefore(moment1)) {
+          return -1
         }
         return 0
       })
