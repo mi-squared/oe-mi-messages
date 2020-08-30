@@ -39,7 +39,7 @@
           <th class="message">Message</th>
           <th class="indicators">Indicators</th>
           <th class="participants">Participants</th>
-          <th class="updated-date"><!-- Updated --></th>
+          <th class="updated-date"><!-- Updated Date --></th>
           <th class="actions"><!-- Actions --></th>
         </tr>
         </thead>
@@ -99,9 +99,11 @@ export default {
           return props.some(prop => {
             let match = false
             if (prop) {
-              if (typeof prop === 'string' &&
-                prop.includes(this.search)) {
-                match = true
+              if (typeof prop === 'string') {
+                const lower = prop.toLowerCase()
+                if (lower.includes(this.search.toLowerCase())) {
+                  match = true
+                }
               } else {
                 if (prop.toString(10).includes(this.search)) {
                   match = true

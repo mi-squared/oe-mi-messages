@@ -207,6 +207,8 @@ CREATE TABLE `aa_pt_notifications` (
   `account` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `aa_pt_notifications` ADD `event` VARCHAR(255) NULL DEFAULT NULL AFTER `account`;
+
 --
 -- Indexes for dumped tables
 --
