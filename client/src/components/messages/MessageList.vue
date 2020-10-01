@@ -3,12 +3,12 @@
 <!--    <div class="text-uppercase text-bold">id selected: {{ selected }}</div>-->
     <div class="message-filters">
       <div>
-        <Popper ref="select-all-options-popper" trigger="clickToToggle" :stopPropagation="true" :options="{ placement: 'botttom' }">
+        <Popper ref="select-all-options-popper" trigger="clickToToggle" :stopPropagation="true" :options="{ placement: 'bottom' }">
           <div class="popper">
             <a class="select-all-options-item" href="#">
-              <StatusPopper :clickText="bulkStatusText"></StatusPopper>
+              <StatusPopper @change-message-status="changeStatusOfSelected" :clickText="bulkStatusText"></StatusPopper>
             </a>
-            <a class="select-all-options-item" href="#">
+            <a class="select-all-options-item" href="#" @click="archiveSelected">
               <span class="fa fa-archive"></span> Archive
             </a>
           </div>
@@ -36,10 +36,10 @@
             </div>
           </th>
           <th class="status">Status</th>
-          <th class="message">Message</th>
+          <th class="message">Message <SortToggle @sort-changed="onSortChanged" :column="`message`" :initialSortDir="`none`"/></th>
           <th class="indicators">Indicators</th>
           <th class="participants">Participants</th>
-          <th class="updated-date"><!-- Updated Date --></th>
+          <th class="updated-date">Updated Date <SortToggle @sort-changed="onSortChanged" :column="`updated-date`" :initialSortDir="`desc`"/></th>
           <th class="actions"><!-- Actions --></th>
         </tr>
         </thead>
@@ -64,10 +64,12 @@ import 'vue-popperjs/dist/vue-popper.css'
 import MessageListItem from './MessageListItem'
 import moment from 'moment'
 import StatusPopper from './StatusPopper'
+import SortToggle from './SortToggle'
 
 export default {
   name: 'MessageList',
   components: {
+    SortToggle,
     StatusPopper,
     MessageListItem,
     Popper
@@ -77,7 +79,12 @@ export default {
       page: 1,
       search: '',
       selected: [],
-      selectAll: false
+      selectAll: false,
+      sortFunctions: {
+        message: this.compareSubjects,
+        'updated-date': this.compareDates
+      },
+      activeSorts: []
     }
   },
   props: {
@@ -88,6 +95,13 @@ export default {
     listId: {
       required: true,
       type: String
+    }
+  },
+  watch: {
+    listId: function (newVal, oldVal) {
+      // When our list changes, we need to do some re-initilization
+      this.selectAll = false
+      this.selected = []
     }
   },
   computed: {
@@ -115,16 +129,25 @@ export default {
         })
         resultMessages = filteredMessages
       }
+
       // Sort the filterd messages by updated date
+      const vm = this
       resultMessages.sort((message1, message2) => {
-        const moment1 = moment(message1.updatedAt)
-        const moment2 = moment(message2.updatedAt)
-        if (moment1.isBefore(moment2)) {
-          return 1
-        } else if (moment2.isBefore(moment1)) {
-          return -1
-        }
-        return 0
+        // Loop through sorting functions and sort messages
+        var sortValue = 0
+        vm.activeSorts.forEach(sort => {
+          if (sort.sortDir !== 'none') {
+            // We use the multiplier, based on sort direction to compare the values
+            const mult = sort.sortDir === 'desc' ? 1 : -1
+            const func = vm.sortFunctions[sort.column]
+            if (func(message1, message2) === 1) {
+              sortValue = 1 * mult
+            } else if (func(message1, message2) === -1) {
+              sortValue = -1 * mult
+            }
+          }
+        })
+        return sortValue
       })
 
       return resultMessages
@@ -134,10 +157,53 @@ export default {
     }
   },
   methods: {
+    compareDates (message1, message2) {
+      const moment1 = moment(message1.updatedAt)
+      const moment2 = moment(message2.updatedAt)
+      if (moment1.isBefore(moment2)) {
+        return 1
+      } else if (moment2.isBefore(moment1)) {
+        return -1
+      }
+      return 0
+    },
+    compareSubjects (message1, message2) {
+      if (message1.subject < message2.subject) {
+        return 1
+      } else if (message2.subject < message1.subject) {
+        return -1
+      }
+      return 0
+    },
     onRefresh () {
       this.$store.dispatch('fetchAllMessageFilters', { userId: this.$store.state.authId }).then(filters => {
         console.log(filters)
       })
+    },
+    archiveSelected () {
+      // Move each selected message to the archive
+      this.selected.forEach(messageId => {
+        const message = this.$store.state.messages[messageId]
+        this.$store.dispatch('moveToList', { message: message, fromListId: this.listId, toListId: 3, userId: this.$store.state.authId })
+      })
+    },
+    changeStatusOfSelected (status) {
+      // Click event handler for bulk status change, change status of all selected messages
+      this.selected.forEach(messageId => {
+        const message = this.$store.state.messages[messageId]
+        this.$store.dispatch('setMessageStatus', { message: message, status: status })
+      })
+    },
+    onSortChanged (sort) {
+      console.log(sort)
+      const index = this.activeSorts.indexOf(sort.column)
+      if (index > -1) {
+        this.activeSorts.splice(index, 1)
+      }
+      // If we are sorting by this, push it on active sorts, otherwise leave it cleared
+      if (sort.sortDir !== 'none') {
+        this.activeSorts.push(sort)
+      }
     },
     onMessageSelected (messageId) {
       Object.values(this.messages).forEach(message => {

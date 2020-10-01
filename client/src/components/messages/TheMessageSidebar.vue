@@ -7,19 +7,15 @@
     <MessageFilterList :messageFilters="messageFilters"/>
     <div class="message-list-header-item">Teams</div>
     <MessageFilterList :messageFilters="teams"/>
-    <div class="message-list-header-item">Tools</div>
-    <MessageToolList :messageTools="messageTools"/>
   </nav>
 </template>
 
 <script>
 import MessageFilterList from './MessageFilterList'
-import MessageToolList from './MessageToolList'
 
 export default {
   name: 'TheMessageSidebar',
   components: {
-    MessageToolList,
     MessageFilterList
   },
   computed: {

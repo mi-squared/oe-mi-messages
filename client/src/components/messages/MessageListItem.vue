@@ -19,6 +19,7 @@
           :tag="tag"
           :key="tag['.key']"
         />
+        <small class="text-muted"> (#{{messageId}})</small>
       </div>
       <div class="preview">{{ messagePreview }}</div>
       <div class="attachments">
@@ -55,8 +56,9 @@
         <li>
           <Popper ref="popper" trigger="hover" :stopPropagation="true" :options="{ placement: 'left' }">
             <div class="popper">
-              <a v-if="listId == 1" class="popper-item" @click="moveToArchive()"><span class="fa fa-archive"></span> Archive</a>
-              <a v-else class="popper-item" @click="moveToInbox()"><span class="fa fa-inbox"></span> Inbox</a>
+              <a v-for="team in teamRecipients" :team="team" :key="team['.key']" class="popper-item" @click="moveToTeam(team['.key'])" data><span class="fa fa-hashtag"></span> {{team.name}}</a>
+              <a class="popper-item" @click="moveToArchive()"><span class="fa fa-archive"></span> Archive</a>
+<!--              <a v-else class="popper-item" @click="moveToInbox()"><span class="fa fa-inbox"></span> Inbox</a>-->
               <a v-if="unread" class="popper-item" @click="markAsRead()"><span class="fa fa-envelope-open"></span> Mark as Read</a>
               <a v-else class="popper-item" @click="markAsUnread()"><span class="fas fa-envelope"></span> Mark as Unread</a>
             </div>
@@ -108,6 +110,10 @@ export default {
       })
 
       this.$store.dispatch('openMessage', this.message)
+    },
+    moveToTeam (teamId) {
+      const teamMessageFilterId = this.$store.state.teams[teamId].filterId
+      this.$store.dispatch('moveToList', { message: this.message, fromListId: this.listId, toListId: teamMessageFilterId, userId: this.$store.state.authId })
     },
     moveToArchive () {
       this.$store.dispatch('moveToList', { message: this.message, fromListId: this.listId, toListId: 3, userId: this.$store.state.authId })
