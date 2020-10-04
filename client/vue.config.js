@@ -1,3 +1,4 @@
+// let messages_base_path = '/interface/modules/custom_modules/oe-mi-messages/client';
 let messages_base_path = '/openemr/interface/modules/custom_modules/oe-mi-messages/client';
 if (process.env.NODE_ENV === 'production') {
   messages_base_path = messages_base_path + '/dist'

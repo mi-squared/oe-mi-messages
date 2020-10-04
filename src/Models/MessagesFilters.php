@@ -11,7 +11,7 @@ class MessagesFilters extends AbstractModel
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
-    protected $fillable = ['userId', 'messageId', 'filterId'];
+    protected $fillable = ['userId', 'teamId', 'messageId', 'filterId'];
 
     public function messages()
     {

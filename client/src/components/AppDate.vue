@@ -21,9 +21,9 @@ export default {
       if (moment(timestamp).isSame(rightNow, 'hour')) {
         formatted = moment(timestamp).fromNow()
       } else if (moment(timestamp).isSame(rightNow, 'day')) {
-        formatted = moment(timestamp).format('[Today at] h:mA')
+        formatted = moment(timestamp).format('[Today at] h:mmA')
       } else if (moment(timestamp).isSame(rightNow, 'week')) {
-        formatted = moment(timestamp).format('ddd h:mA')
+        formatted = moment(timestamp).format('ddd h:mmA')
       } else if (moment(timestamp).isSame(rightNow, 'month')) {
         formatted = moment(timestamp).format('MMM D')
       } else if (moment(timestamp).isSame(rightNow, 'year')) {

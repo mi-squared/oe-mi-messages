@@ -100,21 +100,28 @@ class MessageController extends AbstractController
     public function _action_fetch_all_message_filters()
     {
         $userId = $this->request->getParam('userId');
-        $messageFilters = MessageFilter::with(['messages' => function($q) use($userId) {
-            $q->where('aa_mi_desk_msgs_filters.userId', '=', $userId)
-                ->orderBy('aa_mi_desk_messages.updatedAt', 'desc');
-        }])->where('type', 'folder')->get();
 
         // This is kind of ugly, but get all the 'team' type filters that our user
         // belongs to. Then we combine them with our 'folder' filters that we colleted above.
         $user = User::with('teams')->where('id', $userId)->first();
-        // First collect the Archive filter
-        $teamFilter = MessageFilter::with(['messages'])->find(3);
-        $messageFilters[]= $teamFilter;
+
+        $teamFilters = [];
+        $myTeams = [];
         foreach ($user->teams as $team) {
+            $myTeams []= $team->id;
             $teamFilter = MessageFilter::with(['messages'])->find($team->filterId);
-            $messageFilters[]= $teamFilter;
+            $teamFilters[]= $teamFilter;
         }
+
+        $inboxAndArchive = MessageFilter::with(['messages' => function($q) use($userId, $myTeams) {
+            $q->where('aa_mi_desk_msgs_filters.userId', '=', $userId)
+                ->orWhere(function($q2) use ($myTeams) {
+                    $q2->whereIn('aa_mi_desk_msgs_filters.teamId', $myTeams);
+                })
+                ->orderBy('aa_mi_desk_messages.updatedAt', 'desc');
+        }])->where('type', 'folder')->get();
+
+        $messageFilters = $inboxAndArchive->merge($teamFilters);
 
         $json = $messageFilters->toJson();
         echo $json;

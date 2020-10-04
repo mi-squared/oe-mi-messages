@@ -7,6 +7,7 @@ import sourceData from '@/data'
 Vue.use(Vuex)
 
 const baseUrl = '/openemr'
+// const baseUrl = ''
 
 export default new Vuex.Store({
   state: {

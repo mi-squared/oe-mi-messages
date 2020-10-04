@@ -15,7 +15,7 @@ class Message extends AbstractModel
      *
      * @var array
      */
-    protected $with = ['attachments', 'meta', 'replies', 'teams', 'recipients'];
+    protected $with = ['attachments', 'meta', 'replies', 'teams' /*, 'recipients'*/];
 
     /*
      * Cast our JSON properties to arrays
@@ -25,22 +25,22 @@ class Message extends AbstractModel
         'teams' => 'array'
     ];
 
-    public function recipients() {
-        return $this->belongsToMany(
-            User::class,
-            'aa_mi_desk_msgs_users',
-            'userId',
-            'messageId'
-        );
-    }
+//    public function recipients() {
+//        return $this->belongsToMany(
+//            User::class,
+//            'aa_mi_desk_msgs_filters',
+//            'userId',
+//            'messageId'
+//        );
+//    }
 
     public function teams()
     {
         return $this->belongsToMany(
             Team::class,
-            'aa_mi_desk_msgs_teams',
-            'teamId',
-            'messageId'
+            'aa_mi_desk_msgs_filters',
+            'messageId',
+            'teamId'
         );
     }
 
