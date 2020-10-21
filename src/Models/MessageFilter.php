@@ -24,7 +24,8 @@ class MessageFilter extends AbstractModel
             Message::class,
             'aa_mi_desk_msgs_filters',
             'filterId',
-            'messageId');
+            'messageId')
+            ->withPivot('id', 'userId', 'filterId', 'teamId', 'messageId');
     }
 
     public function team()

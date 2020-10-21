@@ -56,9 +56,14 @@
         <li>
           <Popper ref="popper" trigger="hover" :stopPropagation="true" :options="{ placement: 'left' }">
             <div class="popper">
-              <a v-for="team in teamRecipients" :team="team" :key="team['.key']" class="popper-item" @click="moveToTeam(team['.key'])" data><span class="fa fa-hashtag"></span> {{team.name}}</a>
-              <a class="popper-item" @click="moveToArchive()"><span class="fa fa-archive"></span> Archive</a>
-<!--              <a v-else class="popper-item" @click="moveToInbox()"><span class="fa fa-inbox"></span> Inbox</a>-->
+              <div v-if="listId == 3 && isMyCopy">
+                <a v-if="isMyCopy" class="popper-item" @click="moveToInbox()"><span class="fa fa-inbox"></span> Inbox</a>
+
+              </div>
+              <div v-if="listId == 3 && !isMyCopy">
+                <a v-for="team in teamRecipients" :team="team" :key="team['.key']" class="popper-item" @click="moveToTeam(team['.key'])" data><span class="fa fa-hashtag"></span> {{team.name}}</a>
+              </div>
+              <a v-if="listId != 3" class="popper-item" @click="moveToArchive()"><span class="fa fa-archive"></span> Archive</a>
               <a v-if="unread" class="popper-item" @click="markAsRead()"><span class="fa fa-envelope-open"></span> Mark as Read</a>
               <a v-else class="popper-item" @click="markAsUnread()"><span class="fas fa-envelope"></span> Mark as Unread</a>
             </div>
@@ -147,6 +152,13 @@ export default {
       set (value) {
         console.log(this.message['.key'] + ': ' + value)
       }
+    },
+    isMyCopy () {
+      // If we have a userId, it's mine, otherwise it's not (probably has a teamId and belongs to team)
+      if (this.message.pivot.userId) {
+        return true
+      }
+      return false
     },
     checkboxId () {
       return 'checkbox-' + this.message['.key']

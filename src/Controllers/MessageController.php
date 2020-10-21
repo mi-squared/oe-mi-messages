@@ -132,21 +132,28 @@ class MessageController extends AbstractController
         $fromFilterId = $this->request->getParam('fromFilterId');
         $toFilterId = $this->request->getParam('toFilterId');
         $messageId = $this->request->getParam('messageId');
+        $userId = $this->request->getParam('userId');
+
         // We don't care about the user, it might be a team message, and though userId(1) may be performing this action,
         // The message may not be associated with them, so try User First, Then look up team
-        if ($fromFilterId === 1) {
-            $userId = $this->request->getParam('userId');
+        if ((int)$fromFilterId === 1 || // Inbox
+            (int)$fromFilterId === 3) { // Archive
             $messagesFiltersItem = MessagesFilters::where([
                 'userId' => $userId,
                 'messageId' => $messageId,
                 'filterId' => $fromFilterId
             ])->first();
-        } else {
+        }
+
+        // No user filter found, try team
+        if ($messagesFiltersItem === null &&
+            (int)$fromFilterId >= 3) {
             $messagesFiltersItem = MessagesFilters::where([
                 'messageId' => $messageId,
                 'filterId' => $fromFilterId
             ])->first();
         }
+
         $messagesFiltersItem->filterId = $toFilterId;
         $messagesFiltersItem->save();
         echo $messagesFiltersItem->toJson();
