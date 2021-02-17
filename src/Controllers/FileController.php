@@ -54,7 +54,7 @@ class FileController extends AbstractController
                 $document = new \Document($file->documentId);
                 $pid = $document->get_foreign_id();
                 // /controller.php?document&retrieve&patient_id=2&document_id=1643&as_file=true
-                $baseUrl = PerfectTranscriptionService::$baseUrl;
+                $baseUrl = PerfectTranscriptionService::getBaseUrl();
                 $file->pointer =  "{$baseUrl}/controller.php?document&retrieve&patient_id=$pid&document_id={$file->documentId}&as_file=true";
                 break;
             }

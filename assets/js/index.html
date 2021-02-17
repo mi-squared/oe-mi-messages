@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="webodf.js-0.5.9/webodf.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        function init() {
+            // var odfelement = document.getElementById("odf"),
+            //     odfcanvas = new odf.OdfCanvas(odfelement);
+            // odfcanvas.load("myfile.odt");
+            Wodo.createTextEditor('editorContainer', {
+                allFeaturesEnabled: true,
+                userData: {
+                    fullName: "Tim Lee",
+                    color:    "blue"
+                }
+            }, function (err, editor) {
+                if (err) {
+                    // something failed unexpectedly, deal with it (here just a simple alert)
+                    alert(err);
+                    return;
+                }
+                editor.openDocumentFromUrl("document.odt", function(err) {
+                    if (err) {
+                        // something failed unexpectedly, deal with it (here just a simple alert)
+                        alert("There was an error on opening the document: " + err);
+                    }
+                });
+            });
+        }
+        window.setTimeout(init, 0);
+    </script>
+</head>
+<body>
+<div id="odf"></div>
+</body>
+</html>

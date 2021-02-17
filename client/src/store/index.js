@@ -6,8 +6,11 @@ import sourceData from '@/data'
 
 Vue.use(Vuex)
 
-const baseUrl = '/openemr'
-// const baseUrl = ''
+const getUrl = window.location
+let baseUrl = ''
+if (getUrl.pathname.split('/')[1] === 'openemr') {
+  baseUrl = '/openemr'
+}
 
 export default new Vuex.Store({
   state: {
@@ -79,7 +82,14 @@ export default new Vuex.Store({
       })
     },
     takeOwnership ({ commit }, { message, userId }) {},
+    bulkDownload ({ commit }, { messages }) {
+      const downloadURI = baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!bulk_download'
+      // Open the download in a new 'tab'
+      const messageIds = '[' + messages.toString() + ']'
+      window.open(downloadURI + '&messages=' + messageIds, '_blank')
+    },
     moveToList ({ commit }, { message, fromListId, toListId, userId }) {
+      top.restoreSession()
       return axios.get(baseUrl + '/interface/modules/custom_modules/oe-mi-messages/index.php?action=message!move_message', {
         params: {
           fromFilterId: fromListId,
@@ -286,6 +296,7 @@ export default new Vuex.Store({
         }
       }).then(response => {
         const messageFiltersAll = Object.values(response.data)
+
         // First commit all the messages to the state, then commit the message filters
         messageFiltersAll.forEach(messageFilter => {
           // Create a messages array where the key and value are the message ID for passing to message filter

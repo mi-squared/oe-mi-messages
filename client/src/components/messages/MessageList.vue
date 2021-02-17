@@ -11,6 +11,9 @@
             <a class="select-all-options-item" href="#" @click="archiveSelected">
               <span class="fa fa-archive"></span> Archive
             </a>
+            <a class="select-all-options-item" href="#" @click="downloadSelected">
+              <span class="fa fa-download"></span> Download
+            </a>
           </div>
 
           <a href="#" slot="reference" class="right"><span class="btn select-all-options fa fa-caret-down"></span></a>
@@ -179,6 +182,10 @@ export default {
       this.$store.dispatch('fetchAllMessageFilters', { userId: this.$store.state.authId }).then(filters => {
         console.log(filters)
       })
+    },
+    downloadSelected () {
+      // Initialize a bulk download of all selected messages
+      this.$store.dispatch('bulkDownload', { messages: this.selected })
     },
     archiveSelected () {
       // Move each selected message to the archive

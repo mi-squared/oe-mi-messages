@@ -19,6 +19,7 @@ use Mi2\Messages\Models\Reply;
 use Mi2\Messages\Models\Team;
 use Mi2\Messages\Models\User;
 use Mi2\Messages\Models\UsersTeams;
+use PerfectTranscription\PerfectTranscriptionService;
 
 //use PatientPrivacy\PatientPrivacyService;
 
@@ -122,9 +123,50 @@ class MessageController extends AbstractController
         }])->where('type', 'folder')->get();
 
         $messageFilters = $inboxAndArchive->merge($teamFilters);
-
         $json = $messageFilters->toJson();
         echo $json;
+    }
+
+    public function _action_bulk_download()
+    {
+        $messageParam = $this->request->getParam('messages');
+        // Fetch these messages, create a zip file with the PDF and the DOC
+        $messageIds = explode(",", trim($messageParam, "[] "));
+        $zip = new \ZipArchive();
+        $tmp_dir = $GLOBALS['temporary_files_dir'];
+        $zip_filename = date('Y-m-d_H_i_s') . ".zip";
+        $zip_full_path = $tmp_dir . DIRECTORY_SEPARATOR . $zip_filename;
+        $closed = false;
+        $opened = $zip->open($zip_full_path, \ZipArchive::CREATE);
+        if ($opened === true) {
+            foreach ($messageIds as $messageId) {
+                $message = Message::find($messageId);
+                foreach ($message->attachments as $attachment) {
+                    foreach ($attachment->files as $file) {
+                        if ($file->revision == $attachment->revision &&
+                            ($file->type == 'doc' || $file->type == 'docx')) {
+                            $document = new \Document($file->documentId);
+                            $path = $document->get_url_filepath();
+                            $filename = $document->get_url_file();
+                            if (file_exists($path)) {
+                                $zip->addFile($path, $filename);
+                            }
+                        }
+                    }
+                }
+            }
+            $closed = $zip->close();
+            if ($closed) {
+                $file_size = filesize($zip_full_path);
+                header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                header("Content-Type: application/zip");
+                header("Content-Transfer-Encoding: Binary");
+                header("Content-Length: " . $file_size);
+                header("Content-Disposition: attachment; filename=\"" . $zip_filename . "\"");
+                readfile($zip_full_path);
+            }
+        }
+        exit;
     }
 
     public function _action_move_message()
