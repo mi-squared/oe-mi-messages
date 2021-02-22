@@ -163,12 +163,17 @@ export default {
     },
 
     save (content) {
+      const lastRevision = this.attachment.revision
       this.editorContent = content
       this.$store.dispatch('pushHtml', {
         file: this.htmlFile,
         content: content
       }).then(attachment => {
         console.log('revision is now at:' + attachment.revision)
+        if (lastRevision === attachment.revision) {
+          alert('There was an error saving the document, you are still on revision ' + attachment.revision)
+        }
+        this.attachment = attachment
       })
     },
 
