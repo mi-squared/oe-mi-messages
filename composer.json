@@ -10,7 +10,7 @@
     ],
     "require": {
         "mi-squared/mi-framework": "^0.1.0",
-        "illuminate/database": "6.18.23",
+        "illuminate/database": "6.20.26",
         "openemr/oe-module-installer-plugin": "^0.1.0",
         "cboden/ratchet": "^0.4",
         "php-unoconv/php-unoconv": "^4.1.0"
