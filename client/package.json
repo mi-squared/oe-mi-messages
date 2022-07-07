@@ -14,7 +14,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",
     "dotenv": "^8.2.0",
-    "moment": "^2.25.3",
+    "moment": "^2.29.4",
     "tinymce": "^5.4.1",
     "tiptap": "^1.27.1",
     "tiptap-extensions": "^1.29.1",
