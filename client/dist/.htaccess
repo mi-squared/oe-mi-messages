@@ -1,0 +1,14 @@
+# The messages app uses Vue Router "history" mode, so after navigating the address is a
+# client-side route (e.g. .../client/dist/messages/list/1). Reloading such a page asked
+# Apache for a file that does not exist (404). Serve index.html for app routes instead.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Real files and folders are served as-is.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    # Missing static assets stay a real 404.
+    RewriteRule ^(js|css|img|fonts)/ - [L]
+    # Everything else is an app route.
+    RewriteRule ^ index.html [L]
+</IfModule>
