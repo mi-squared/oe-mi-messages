@@ -11,7 +11,6 @@
 //namespace PatientPrivacy;
 //require_once __DIR__.'/vendor/autoload.php';
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use OpenEMR\Menu\MenuEvent;
 

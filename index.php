@@ -4,7 +4,7 @@ use Mi2\Messages\Models\Database;
 // $ignoreAuth = true; // This ignore is only used for developing outisde of OpenEMR
 
 require_once __DIR__.'/../../../globals.php';
-require_once __DIR__.'/vendor/autoload.php';
+// Dependencies (Eloquent, mi-framework) come from OpenEMR's root composer autoloader.
 
 
 // Override the userId in every request
