@@ -40,5 +40,6 @@ function oe_module_mi_messages_add_menu_item(MenuEvent $event)
     return $event;
 }
 
-// Listen for the menu update event so we can dynamically add our patient privacy menu item
-$eventDispatcher->addListener(MenuEvent::MENU_UPDATE, 'oe_module_mi_messages_add_menu_item');
+// The "Pro Messages" admin menu item was a developer shortcut for testing against a dev
+// server. Users reach the app from the Messages main-menu item, so it is no longer added.
+// $eventDispatcher->addListener(MenuEvent::MENU_UPDATE, 'oe_module_mi_messages_add_menu_item');
