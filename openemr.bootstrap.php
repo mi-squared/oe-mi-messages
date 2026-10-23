@@ -24,7 +24,7 @@ function oe_module_mi_messages_add_menu_item(MenuEvent $event)
     $menuItem->target = 'adm';
     $menuItem->menu_id = 'adm0';
     $menuItem->label = xlt("Pro Messages");
-    $menuItem->url = "/interface/modules/custom_modules/oe-mi-messages/client";
+    $menuItem->url = "/interface/modules/custom_modules/oe-mi-messages/client/dist";
     $menuItem->children = [];
     $menuItem->acl_req = ["admin", "super"];
 
