@@ -3,6 +3,12 @@
 # Apache for a file that does not exist (404). Serve index.html for app routes instead.
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # A direct request for index.html (OpenEMR's "Default Open Tabs" needs a real file path)
+    # goes to the folder, so the app starts on its home route. Internal rewrites to
+    # index.html below do not match, since THE_REQUEST is the original request line.
+    RewriteCond %{THE_REQUEST} \s\S*/client/dist/index\.html[\s?]
+    RewriteCond %{REQUEST_URI} ^(.*/client/dist/)index\.html$
+    RewriteRule ^index\.html$ %1 [R=302,L]
     # Real files and folders are served as-is.
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
